@@ -19,6 +19,7 @@ const CharacterExtractionPrompt = `请分析以下小说文本，提取所有重
 - 网文中常有角色"马甲"（化名、假名），请识别并归入同一角色
 - 角色可能有多个称呼（如"韩立"→"韩师叔"→"厉飞雨"），全部收集到aliases中
 - 关系类型请使用中文网文常用词汇（如"道侣""宿敌""护道者"）
+- relationships 中的 target_id 必须填写为目标角色的 id（如 "char_hanli"），不要留空
 - role 字段取值为: protagonist | deuteragonist | antagonist | supporting | love_interest | cameo
 
 <<输入文本>>
@@ -49,7 +50,7 @@ id (格式为 "scene_<序号>"), title (场景标题), sequence (整数), locati
 只返回JSON数组，不要其他说明。`
 
 // ScriptConversionPrompt 剧本转换提示词模板。
-// 占位符: {character_context}, {scene_title}, {location}, {time}, {characters_present}, {text}
+// 占位符: {character_context}, {scene_title}, {scene_summary}, {location}, {time}, {characters_present}, {text}
 const ScriptConversionPrompt = `将以下小说场景转换为标准剧本格式。
 
 转换规则：
@@ -66,10 +67,13 @@ const ScriptConversionPrompt = `将以下小说场景转换为标准剧本格式
 
 <<场景信息>>
 场景：{scene_title}
+	概要：{scene_summary}
 地点：{location}
 时间：{time}
 出现角色：{characters_present}
 
+
+	重要：只转换上述场景对应的原文部分，不要转换其他场景的内容。如果原文包含多个场景的文本，请严格只提取与「{scene_title}」相关的段落进行转换。
 <<原文>>
 {text}
 
