@@ -25,7 +25,7 @@ func NewSQLiteCache(cacheDir string) (*SQLiteCache, error) {
 	}
 
 	dbPath := filepath.Join(cacheDir, "novel2script_cache.db")
-	db, err := sql.Open("sqlite3", dbPath+"?_journal_mode=WAL")
+	db, err := sql.Open("sqlite", dbPath+"?_journal_mode=WAL")
 	if err != nil {
 		return nil, fmt.Errorf("打开SQLite失败: %w", err)
 	}
