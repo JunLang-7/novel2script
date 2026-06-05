@@ -27,8 +27,11 @@ func WriteYAMLFile(path string, script *models.Script) error {
 	if err != nil {
 		return fmt.Errorf("创建文件失败: %w", err)
 	}
-	defer f.Close()
-	return WriteYAML(f, script)
+	if err := WriteYAML(f, script); err != nil {
+		f.Close()
+		return err
+	}
+	return f.Close()
 }
 
 // addSchemaComment 在 YAML 文件头添加 schema 引用注释。
