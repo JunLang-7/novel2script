@@ -84,6 +84,9 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	stats.TotalOutputTokens += charUsage.OutputTokens
 	o.log("提取到 %d 个角色", len(characters))
 
+	// 后处理：补全关系中的 target_id
+	fillTargetIDs(characters)
+
 	// Step 3: 场景分割
 	o.log("分割场景...")
 	sceneMerger := NewSceneMerger()
@@ -238,12 +241,13 @@ func (o *Orchestrator) convertScene(ctx context.Context, scene *models.Scene, ch
 	prompt := llm.ScriptConversionPrompt
 	prompt = strings.Replace(prompt, "{character_context}", charCtx, 1)
 	prompt = strings.Replace(prompt, "{scene_title}", scene.Title, 1)
+	prompt = strings.Replace(prompt, "{scene_summary}", scene.Summary, 1)
 	prompt = strings.Replace(prompt, "{location}", scene.Setting.Location, 1)
 	prompt = strings.Replace(prompt, "{time}", scene.Setting.TimeOfDay, 1)
 	prompt = strings.Replace(prompt, "{characters_present}", charList, 1)
-	sceneText := scene.SourceText
+	sceneText := scene.Summary
 	if sceneText == "" {
-		sceneText = scene.Summary
+		sceneText = scene.SourceText
 	}
 	prompt = strings.Replace(prompt, "{text}", sceneText, 1)
 
@@ -315,4 +319,42 @@ func (o *Orchestrator) log(format string, args ...any) {
 // warn 总是输出警告信息到 stderr。
 func (o *Orchestrator) warn(format string, args ...any) {
 	log.Printf("[novel2script] "+format, args...)
+}
+
+// fillTargetIDs 根据角色名和别名自动补全关系中的 target_id。
+func fillTargetIDs(characters []models.Character) {
+	// 构建 name/alias → id 的索引
+	index := make(map[string]string)
+	for _, ch := range characters {
+		index[ch.Name] = ch.ID
+		for _, alias := range ch.Aliases {
+			if _, exists := index[alias]; !exists {
+				index[alias] = ch.ID
+			}
+		}
+	}
+
+	for i := range characters {
+		for j := range characters[i].Relationships {
+			rel := &characters[i].Relationships[j]
+			if rel.TargetID != "" {
+				continue
+			}
+			// 在描述中查找已知角色名
+			rel.TargetID = findTargetID(rel.Description, index)
+		}
+	}
+}
+
+// findTargetID 在文本中查找已索引的角色名，返回对应的 ID。
+func findTargetID(text string, index map[string]string) string {
+	var bestMatch string
+	bestLen := 0
+	for name, id := range index {
+		if len(name) > bestLen && strings.Contains(text, name) {
+			bestMatch = id
+			bestLen = len(name)
+		}
+	}
+	return bestMatch
 }

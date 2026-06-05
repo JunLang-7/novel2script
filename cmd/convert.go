@@ -168,6 +168,15 @@ func (c *ConvertCommand) Run(args []string) error {
 		return fmt.Errorf("转换失败: %w", err)
 	}
 
+	// 用输入文件名推断原著名称和剧本标题
+	novelName := extractNovelName(inputPath)
+	if script.SourceNovel == "" {
+		script.SourceNovel = novelName
+	}
+	if novelName != "" {
+		script.ScriptTitle = novelName + "·剧本改编"
+	}
+
 	// 输出统计
 	if c.verbose {
 		fmt.Fprintf(os.Stderr, "处理统计:\n")
@@ -229,6 +238,16 @@ func reorderArgs(args []string) []string {
 		}
 	}
 	return append(flags, positional...)
+}
+
+// extractNovelName 从输入文件路径中提取小说名称。
+func extractNovelName(path string) string {
+	base := filepath.Base(path)
+	ext := filepath.Ext(base)
+	name := base[:len(base)-len(ext)]
+	// 去掉可能的章节标记后缀
+	name = strings.TrimRight(name, "0123456789-_=+ ")
+	return strings.TrimSpace(name)
 }
 
 func runDryRun(rawText string) error {
