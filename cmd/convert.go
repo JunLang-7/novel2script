@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/JunLang-7/novel2script/internal/config"
@@ -82,7 +83,7 @@ func (c *ConvertCommand) Usage() string {
 
 // Run 执行 convert 命令。
 func (c *ConvertCommand) Run(args []string) error {
-	c.flagSet.Parse(args)
+	c.flagSet.Parse(reorderArgs(args))
 
 	// 获取输入文件
 	inputArgs := c.flagSet.Args()
@@ -186,6 +187,9 @@ func (c *ConvertCommand) Run(args []string) error {
 	}
 
 	// 输出
+	if err := os.MkdirAll(filepath.Dir(c.output), 0755); err != nil {
+		return fmt.Errorf("创建输出目录失败: %w", err)
+	}
 	switch strings.ToLower(c.format) {
 	case "md", "markdown":
 		f, err := os.Create(c.output)
@@ -206,6 +210,25 @@ func (c *ConvertCommand) Run(args []string) error {
 	default:
 		return fmt.Errorf("不支持的输出格式: %s，支持 yaml | md", c.format)
 	}
+}
+
+// reorderArgs 将命令行参数中的位置参数移到标志参数之后，
+// 以兼容 Go flag 包（标志必须在位置参数之前）。
+func reorderArgs(args []string) []string {
+	var flags []string
+	var positional []string
+	for i := 0; i < len(args); i++ {
+		if strings.HasPrefix(args[i], "-") {
+			flags = append(flags, args[i])
+			if i+1 < len(args) && !strings.HasPrefix(args[i+1], "-") {
+				flags = append(flags, args[i+1])
+				i++
+			}
+		} else {
+			positional = append(positional, args[i])
+		}
+	}
+	return append(flags, positional...)
 }
 
 func runDryRun(rawText string) error {

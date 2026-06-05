@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/JunLang-7/novel2script/internal/config"
 	"github.com/JunLang-7/novel2script/internal/formatters"
@@ -57,7 +58,7 @@ func (c *AnalyzeCommand) Usage() string {
 
 // Run 执行 analyze 命令。
 func (c *AnalyzeCommand) Run(args []string) error {
-	c.flagSet.Parse(args)
+	c.flagSet.Parse(reorderArgs(args))
 
 	inputArgs := c.flagSet.Args()
 	if len(inputArgs) < 1 {
@@ -111,6 +112,9 @@ func (c *AnalyzeCommand) Run(args []string) error {
 		stats.Duration,
 	)
 
+	if err := os.MkdirAll(filepath.Dir(c.output), 0755); err != nil {
+		return fmt.Errorf("创建输出目录失败: %w", err)
+	}
 	f, err := os.Create(c.output)
 	if err != nil {
 		return fmt.Errorf("创建输出文件失败: %w", err)

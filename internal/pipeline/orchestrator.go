@@ -66,7 +66,7 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	o.log("检测到 %d 个章节，总计约 %s", stats.TotalChapters, text.FormatCharCount(stats.TotalChars))
 
 	if len(chapters) < 3 {
-		o.log("警告: 检测到的章节数不足3个，改编效果可能不理想")
+		o.warn("警告: 检测到的章节数不足3个，改编效果可能不理想")
 	}
 
 	chunks := text.GroupIntoChunks(chapters, o.cfg.TokensPerChunk)
@@ -77,7 +77,7 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	o.log("提取角色信息...")
 	characters, charUsage, err := o.extractCharacters(ctx, chunks)
 	if err != nil {
-		o.log("警告: 角色提取部分失败: %v", err)
+		o.warn("警告: 角色提取失败: %v", err)
 	}
 	stats.NumLLMCalls++
 	stats.TotalInputTokens += charUsage.InputTokens
@@ -90,7 +90,7 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	for _, chunk := range chunks {
 		scenes, usage, err := o.analyzeScenes(ctx, chunk)
 		if err != nil {
-			o.log("警告: 场景分割失败(chunk %s): %v", chunk.ID, err)
+			o.warn("警告: 场景分割失败(chunk %s): %v", chunk.ID, err)
 			continue
 		}
 		sceneMerger.Add(scenes)
@@ -106,7 +106,7 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	for i := range scenes {
 		elements, usage, err := o.convertScene(ctx, &scenes[i], characters)
 		if err != nil {
-			o.log("警告: 场景转换失败(%s): %v", scenes[i].ID, err)
+			o.warn("警告: 场景转换失败(%s): %v", scenes[i].ID, err)
 			continue
 		}
 		scenes[i].Elements = elements
@@ -310,4 +310,9 @@ func (o *Orchestrator) log(format string, args ...any) {
 	if o.cfg.Verbose {
 		log.Printf("[novel2script] "+format, args...)
 	}
+}
+
+// warn 总是输出警告信息到 stderr。
+func (o *Orchestrator) warn(format string, args ...any) {
+	log.Printf("[novel2script] "+format, args...)
 }

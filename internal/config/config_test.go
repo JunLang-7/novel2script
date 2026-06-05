@@ -17,10 +17,11 @@ func TestLoad_Defaults(t *testing.T) {
 		restoreEnv("NOVEL2SCRIPT_PARALLEL", oldParallel)
 	}()
 
-	os.Unsetenv("NOVEL2SCRIPT_API_KEY")
-	os.Unsetenv("NOVEL2SCRIPT_MODEL")
-	os.Unsetenv("NOVEL2SCRIPT_PROVIDER")
-	os.Unsetenv("NOVEL2SCRIPT_PARALLEL")
+	// Set to empty instead of Unsetenv to prevent .env from re-populating
+	os.Setenv("NOVEL2SCRIPT_API_KEY", "")
+	os.Setenv("NOVEL2SCRIPT_MODEL", "")
+	os.Setenv("NOVEL2SCRIPT_PROVIDER", "")
+	os.Setenv("NOVEL2SCRIPT_PARALLEL", "")
 
 	cfg := Load()
 	if cfg.Provider != "anthropic" {
