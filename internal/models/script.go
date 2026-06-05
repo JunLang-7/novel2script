@@ -54,7 +54,7 @@ type Scene struct {
 	Sequence           int                 `yaml:"sequence"`
 	Setting            SceneSetting        `yaml:"setting" validate:"required"`
 	Summary            string              `yaml:"summary,omitempty"`
-	SourceText         string              `yaml:"source_text,omitempty"`
+	SourceText         string              `yaml:"-"`
 	ChapterSource      int                 `yaml:"chapter_source,omitempty"`
 	EstimatedDuration  string              `yaml:"estimated_duration,omitempty"`
 	Mood               string              `yaml:"mood,omitempty"`
