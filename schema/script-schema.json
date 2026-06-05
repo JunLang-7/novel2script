@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://novel2script.dev/schemas/script-v1.json",
+  "title": "novel2script Script Schema",
+  "description": "AI小说转剧本工具输出的YAML剧本格式定义 v1.0",
+  "type": "object",
+  "required": ["script_title", "source_novel", "characters", "acts"],
+  "properties": {
+    "script_title": {
+      "type": "string",
+      "description": "剧本名称"
+    },
+    "source_novel": {
+      "type": "string",
+      "description": "原著名称"
+    },
+    "source_author": {
+      "type": "string",
+      "description": "原著作者"
+    },
+    "adaptor": {
+      "type": "string",
+      "description": "改编工具及版本"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "生成时间（ISO 8601格式）"
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema版本号",
+      "default": "1.0.0"
+    },
+    "metadata": { "$ref": "#/$defs/Metadata" },
+    "characters": {
+      "type": "array",
+      "description": "角色表",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/Character" }
+    },
+    "acts": {
+      "type": "array",
+      "description": "剧本正文（按幕组织）",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/Act" }
+    }
+  },
+  "$defs": {
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "genre": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "题材标签"
+        },
+        "original_language": {
+          "type": "string",
+          "description": "原著语言"
+        },
+        "target_format": {
+          "type": "string",
+          "description": "目标格式",
+          "default": "screenplay"
+        },
+        "total_novel_chapters": {
+          "type": "integer",
+          "description": "原著总章节数"
+        },
+        "total_novel_chars": {
+          "type": "integer",
+          "description": "原著总字数"
+        },
+        "adaptation_coverage": {
+          "type": "string",
+          "description": "改编覆盖范围"
+        },
+        "synopsis": {
+          "type": "string",
+          "description": "故事梗概"
+        },
+        "estimated_total_scenes": {
+          "type": "integer",
+          "description": "预估总场景数"
+        }
+      }
+    },
+    "Character": {
+      "type": "object",
+      "required": ["id", "name", "role"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "角色唯一标识符，格式: char_<拼音名>",
+          "pattern": "^char_[a-z]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "角色名称"
+        },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "角色别名/化名/绰号/道号"
+        },
+        "role": {
+          "type": "string",
+          "description": "角色定位",
+          "enum": ["protagonist", "deuteragonist", "antagonist", "supporting", "love_interest", "cameo"]
+        },
+        "importance_rank": {
+          "type": "integer",
+          "description": "重要度排序",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "角色总述"
+        },
+        "archetype": {
+          "type": "string",
+          "description": "角色原型（如"普通人崛起""重生复仇"）"
+        },
+        "traits": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "性格特征"
+        },
+        "character_arc": {
+          "type": "string",
+          "description": "角色成长弧线"
+        },
+        "first_appearance_chapter": {
+          "type": "integer",
+          "description": "首次出场章节号"
+        },
+        "notes": {
+          "type": "string",
+          "description": "补充说明"
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Relationship" },
+          "description": "角色关系列表"
+        }
+      }
+    },
+    "Relationship": {
+      "type": "object",
+      "required": ["target_id", "type"],
+      "properties": {
+        "target_id": {
+          "type": "string",
+          "description": "关联角色ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "关系类型（如"道侣""宿敌""护道者"）"
+        },
+        "description": {
+          "type": "string",
+          "description": "关系描述"
+        },
+        "first_interaction_chapter": {
+          "type": "integer",
+          "description": "首次互动章节号"
+        }
+      }
+    },
+    "Act": {
+      "type": "object",
+      "required": ["id", "title", "scenes"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "幕标识符",
+          "pattern": "^act_[a-z0-9]+$"
+        },
+        "title": {
+          "type": "string",
+          "description": "幕标题"
+        },
+        "summary": {
+          "type": "string",
+          "description": "幕概要"
+        },
+        "chapter_range": {
+          "type": "string",
+          "description": "对应原文章节范围"
+        },
+        "scenes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/Scene" }
+        }
+      }
+    },
+    "Scene": {
+      "type": "object",
+      "required": ["id", "title", "setting", "elements"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "场景标识符"
+        },
+        "type": {
+          "type": "string",
+          "description": "场景类型",
+          "enum": ["scene", "montage", "flashback", "interlude"],
+          "default": "scene"
+        },
+        "title": { "type": "string", "description": "场景标题" },
+        "sequence": { "type": "integer", "description": "场景序号" },
+        "setting": { "$ref": "#/$defs/SceneSetting" },
+        "summary": { "type": "string", "description": "场景概要" },
+        "chapter_source": { "type": "integer", "description": "对应原文章节号" },
+        "estimated_duration": { "type": "string", "description": "预估银幕时长" },
+        "mood": { "type": "string", "description": "场景情绪基调" },
+        "characters_present": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CharacterPresence" }
+        },
+        "elements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/ScriptElement" }
+        },
+        "transition": { "$ref": "#/$defs/Transition" }
+      }
+    },
+    "SceneSetting": {
+      "type": "object",
+      "required": ["location"],
+      "properties": {
+        "location": { "type": "string", "description": "地点" },
+        "location_type": { "type": "string", "description": "地点类型（门派/洞府/城镇/荒野/秘境）" },
+        "time_of_day": { "type": "string", "description": "时间（清晨/上午/正午/下午/黄昏/夜晚/深夜）" },
+        "atmosphere": { "type": "string", "description": "氛围描述" },
+        "weather": { "type": "string", "description": "天气" },
+        "era": { "type": "string", "description": "时代背景" }
+      }
+    },
+    "CharacterPresence": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "description": "角色ID" },
+        "state": { "type": "string", "description": "角色在本场景的状态" }
+      }
+    },
+    "ScriptElement": {
+      "type": "object",
+      "required": ["id", "type", "content"],
+      "properties": {
+        "id": { "type": "string", "description": "元素标识符" },
+        "type": {
+          "type": "string",
+          "description": "元素类型",
+          "enum": ["action", "dialogue", "internal_monologue", "narration", "title_card"]
+        },
+        "content": { "type": "string", "description": "元素内容" },
+        "speaker_id": { "type": "string", "description": "说话者ID（dialogue/internal_monologue）" },
+        "speaker_name": { "type": "string", "description": "说话者名称（dialogue/internal_monologue）" },
+        "tone": { "type": "string", "description": "语气标注（dialogue）" },
+        "delivery": { "type": "string", "description": "表演指示（dialogue）" },
+        "language_style": { "type": "string", "description": "语言风格标记（dialogue）" },
+        "visibility": { "type": "string", "description": "呈现方式（internal_monologue）" },
+        "visual_cue": { "type": "string", "description": "镜头提示（action）" },
+        "source_paragraph": { "type": "integer", "description": "对应原文段落号" }
+      }
+    },
+    "Transition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "转场类型",
+          "enum": ["cut_to", "fade_to", "dissolve_to", "match_cut"]
+        },
+        "next_scene_hint": { "type": "string", "description": "下一场景提示" },
+        "duration": { "type": "string", "description": "转场时长" }
+      }
+    }
+  }
+}
