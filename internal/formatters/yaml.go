@@ -3,6 +3,7 @@ package formatters
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/JunLang-7/novel2script/internal/models"
@@ -22,8 +23,12 @@ func WriteYAML(w io.Writer, script *models.Script) error {
 
 // WriteYAMLFile 将 Script 序列化为 YAML 写入文件路径。
 func WriteYAMLFile(path string, script *models.Script) error {
-	// 实际写入留给 formatters/yaml.go 的 WriteYAML 结合文件操作
-	return nil // placeholder
+	f, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("创建文件失败: %w", err)
+	}
+	defer f.Close()
+	return WriteYAML(f, script)
 }
 
 // addSchemaComment 在 YAML 文件头添加 schema 引用注释。
