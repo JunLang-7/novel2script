@@ -198,7 +198,14 @@ func (c *Client) callAnthropic(ctx context.Context, sysPrompt, userPrompt string
 
 	var ar anthropicResponse
 	if err := json.Unmarshal(respBody, &ar); err != nil {
-		return nil, &RetryableError{Message: fmt.Sprintf("JSON解析失败: %v", err)}
+		return nil, &RetryableError{Message: fmt.Sprintf("JSON解析失败: %v, 响应: %s", err, truncate(string(respBody), 200))}
+	}
+
+	if resp.StatusCode != 200 {
+		if ar.Error != nil {
+			return nil, fmt.Errorf("%s", ar.Error.Message)
+		}
+		return nil, fmt.Errorf("API返回错误(%d): %s", resp.StatusCode, truncate(string(respBody), 200))
 	}
 
 	if ar.Error != nil {
@@ -266,7 +273,14 @@ func (c *Client) callOpenAI(ctx context.Context, sysPrompt, userPrompt string, r
 
 	var or openaiResponse
 	if err := json.Unmarshal(respBody, &or); err != nil {
-		return nil, &RetryableError{Message: fmt.Sprintf("JSON解析失败: %v", err)}
+		return nil, &RetryableError{Message: fmt.Sprintf("JSON解析失败: %v, 响应: %s", err, truncate(string(respBody), 200))}
+	}
+
+	if resp.StatusCode != 200 {
+		if or.Error != nil {
+			return nil, fmt.Errorf("%s", or.Error.Message)
+		}
+		return nil, fmt.Errorf("API返回错误(%d): %s", resp.StatusCode, truncate(string(respBody), 200))
 	}
 
 	if or.Error != nil {

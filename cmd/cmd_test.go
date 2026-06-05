@@ -37,7 +37,7 @@ func TestConvertCommand_MissingAPIKey(t *testing.T) {
 
 	// Clear API key to trigger the missing key error
 	oldKey := os.Getenv("NOVEL2SCRIPT_API_KEY")
-	os.Unsetenv("NOVEL2SCRIPT_API_KEY")
+	os.Setenv("NOVEL2SCRIPT_API_KEY", "")
 	defer func() {
 		if oldKey != "" {
 			os.Setenv("NOVEL2SCRIPT_API_KEY", oldKey)
