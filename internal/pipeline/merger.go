@@ -27,6 +27,7 @@ func (m *CharacterMerger) Add(characters []models.Character) {
 		idx, isDuplicate := m.findExisting(&ch)
 		if isDuplicate {
 			m.mergeInto(idx, &ch)
+			m.indexCharacter(idx, &ch)
 		} else {
 			idx = len(m.result)
 			m.result = append(m.result, ch)
