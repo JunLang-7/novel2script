@@ -164,6 +164,165 @@ func TestExpandHome_Empty(t *testing.T) {
 	}
 }
 
+func TestParseEnvFile_Basic(t *testing.T) {
+	content := "KEY1=value1\nKEY2=hello world\n"
+	f := tempEnvFile(t, content)
+	defer f.Close()
+
+	parseEnvFile(f)
+
+	if v := os.Getenv("KEY1"); v != "value1" {
+		t.Errorf("KEY1 = %q, want %q", v, "value1")
+	}
+	if v := os.Getenv("KEY2"); v != "hello world" {
+		t.Errorf("KEY2 = %q, want %q", v, "hello world")
+	}
+	os.Unsetenv("KEY1")
+	os.Unsetenv("KEY2")
+}
+
+func TestParseEnvFile_QuotedValues(t *testing.T) {
+	content := `DOUBLE="quoted value"
+SINGLE='single quoted'
+`
+	f := tempEnvFile(t, content)
+	defer f.Close()
+
+	parseEnvFile(f)
+
+	if v := os.Getenv("DOUBLE"); v != "quoted value" {
+		t.Errorf("DOUBLE = %q, want %q", v, "quoted value")
+	}
+	if v := os.Getenv("SINGLE"); v != "single quoted" {
+		t.Errorf("SINGLE = %q, want %q", v, "single quoted")
+	}
+	os.Unsetenv("DOUBLE")
+	os.Unsetenv("SINGLE")
+}
+
+func TestParseEnvFile_CommentsAndBlankLines(t *testing.T) {
+	content := `# 这是注释行
+
+# 这是另一个注释
+REAL_KEY=real_value
+# 行内注释
+`
+	f := tempEnvFile(t, content)
+	defer f.Close()
+
+	parseEnvFile(f)
+
+	if v := os.Getenv("REAL_KEY"); v != "real_value" {
+		t.Errorf("REAL_KEY = %q, want %q", v, "real_value")
+	}
+	os.Unsetenv("REAL_KEY")
+}
+
+func TestParseEnvFile_InlineComment(t *testing.T) {
+	content := "KEY=value # 这是行内注释\n"
+	f := tempEnvFile(t, content)
+	defer f.Close()
+
+	parseEnvFile(f)
+
+	if v := os.Getenv("KEY"); v != "value" {
+		t.Errorf("KEY = %q, want %q", v, "value")
+	}
+	os.Unsetenv("KEY")
+}
+
+func TestParseEnvFile_ExistingEnvWins(t *testing.T) {
+	os.Setenv("EXISTING_KEY", "already_set")
+	defer os.Unsetenv("EXISTING_KEY")
+
+	content := "EXISTING_KEY=from_file\n"
+	f := tempEnvFile(t, content)
+	defer f.Close()
+
+	parseEnvFile(f)
+
+	if v := os.Getenv("EXISTING_KEY"); v != "already_set" {
+		t.Errorf("existing env should not be overridden: got %q", v)
+	}
+}
+
+func TestLoad_WithDotEnv(t *testing.T) {
+	dir := t.TempDir()
+	oldDir, _ := os.Getwd()
+	os.Chdir(dir)
+	defer os.Chdir(oldDir)
+
+	// Clear relevant env vars
+	oldVars := saveEnvVars("NOVEL2SCRIPT_API_KEY", "NOVEL2SCRIPT_PROVIDER", "NOVEL2SCRIPT_PARALLEL")
+	defer restoreEnvVars(oldVars)
+
+	// Write .env file in temp directory
+	envContent := "NOVEL2SCRIPT_API_KEY=sk-dotenv-key\nNOVEL2SCRIPT_PROVIDER=openai\nNOVEL2SCRIPT_PARALLEL=8\n"
+	os.WriteFile(".env", []byte(envContent), 0644)
+
+	cfg := Load()
+	if cfg.APIKey != "sk-dotenv-key" {
+		t.Errorf("expected sk-dotenv-key from .env, got %q", cfg.APIKey)
+	}
+	if cfg.Provider != "openai" {
+		t.Errorf("expected openai from .env, got %q", cfg.Provider)
+	}
+	if cfg.Parallel != 8 {
+		t.Errorf("expected parallel 8 from .env, got %d", cfg.Parallel)
+	}
+}
+
+func TestLoad_ExistingEnvOverridesDotEnv(t *testing.T) {
+	dir := t.TempDir()
+	oldDir, _ := os.Getwd()
+	os.Chdir(dir)
+	defer os.Chdir(oldDir)
+
+	os.Setenv("NOVEL2SCRIPT_API_KEY", "sk-from-env")
+	defer os.Unsetenv("NOVEL2SCRIPT_API_KEY")
+
+	os.WriteFile(".env", []byte("NOVEL2SCRIPT_API_KEY=sk-from-file\n"), 0644)
+
+	cfg := Load()
+	if cfg.APIKey != "sk-from-env" {
+		t.Errorf("env var should override .env: got %q", cfg.APIKey)
+	}
+}
+
+func saveEnvVars(keys ...string) map[string]string {
+	vars := make(map[string]string)
+	for _, k := range keys {
+		vars[k] = os.Getenv(k)
+		os.Unsetenv(k)
+	}
+	return vars
+}
+
+func restoreEnvVars(vars map[string]string) {
+	for k, v := range vars {
+		if v != "" {
+			os.Setenv(k, v)
+		} else {
+			os.Unsetenv(k)
+		}
+	}
+}
+
+func tempEnvFile(t *testing.T, content string) *os.File {
+	t.Helper()
+	f, err := os.CreateTemp("", "env_test_*.env")
+	if err != nil {
+		t.Fatalf("create temp file: %v", err)
+	}
+	if _, err := f.WriteString(content); err != nil {
+		t.Fatalf("write temp file: %v", err)
+	}
+	if _, err := f.Seek(0, 0); err != nil {
+		t.Fatalf("seek temp file: %v", err)
+	}
+	return f
+}
+
 func restoreEnv(key, val string) {
 	if val != "" {
 		os.Setenv(key, val)

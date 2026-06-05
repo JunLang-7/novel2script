@@ -1,0 +1,21 @@
+# Binaries
+novel2script
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Go
+*.test
+*.out
+
+.claude/
