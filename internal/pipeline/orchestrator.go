@@ -219,6 +219,7 @@ func (o *Orchestrator) analyzeScenes(ctx context.Context, chunk text.Chunk) ([]m
 				Atmosphere:   s.Atmosphere,
 			},
 			Summary:           s.Summary,
+			SourceText:        chunk.Text,
 			ChapterSource:     s.ChapterSource,
 			Mood:              s.Mood,
 			CharactersPresent: s.CharactersPresent,
@@ -240,7 +241,11 @@ func (o *Orchestrator) convertScene(ctx context.Context, scene *models.Scene, ch
 	prompt = strings.Replace(prompt, "{location}", scene.Setting.Location, 1)
 	prompt = strings.Replace(prompt, "{time}", scene.Setting.TimeOfDay, 1)
 	prompt = strings.Replace(prompt, "{characters_present}", charList, 1)
-	prompt = strings.Replace(prompt, "{text}", scene.Summary, 1)
+	sceneText := scene.SourceText
+	if sceneText == "" {
+		sceneText = scene.Summary
+	}
+	prompt = strings.Replace(prompt, "{text}", sceneText, 1)
 
 	type llmElement struct {
 		ID           string `json:"id"`
