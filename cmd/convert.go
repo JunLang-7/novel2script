@@ -91,6 +91,12 @@ func (c *ConvertCommand) Run(args []string) error {
 	}
 	inputPath := inputArgs[0]
 
+	// 提前校验输出格式，避免运行完整管道后才发现不支持
+	outputFormat := strings.ToLower(c.format)
+	if outputFormat != "yaml" && outputFormat != "md" && outputFormat != "markdown" && outputFormat != "" {
+		return fmt.Errorf("不支持的输出格式: %s，支持 yaml | md", c.format)
+	}
+
 	// 加载配置
 	cfg := config.Load()
 	if c.model != "" {
