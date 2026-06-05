@@ -136,6 +136,11 @@ func (m *characterMerger) findExisting(ch *models.Character) (int, bool) {
 	if idx, ok := m.aliasIndex[ch.Name]; ok {
 		return idx, true
 	}
+	for _, alias := range ch.Aliases {
+		if idx, ok := m.nameIndex[alias]; ok {
+			return idx, true
+		}
+	}
 	return -1, false
 }
 
