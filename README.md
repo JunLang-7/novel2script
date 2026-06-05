@@ -181,7 +181,7 @@ novel2script/
 │   ├── formatters/              # YAML / Markdown 输出
 │   ├── llm/                     # LLM 客户端、提示词、token 估算
 │   ├── text/                    # 章节检测、编码识别
-│   ├── storage/                 # SQLite 缓���（断点续传）
+│   ├── storage/                 # SQLite 缓存（断点续传）
 │   └── config/                  # 环境变量配置
 ├── schema/                      # JSON Schema + 设计文档
 ├── tests/fixtures/              # 测试样本
