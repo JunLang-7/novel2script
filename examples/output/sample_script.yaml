@@ -1,0 +1,302 @@
+# novel2script 剧本格式 v0.1.0
+# 原著: 凡人修仙传（示例）
+# 生成时间: 2026-06-05 10:00:00
+# schema: https://novel2script.dev/schemas/script-v1.json
+# 本文件为 AI 辅助生成的剧本初稿，可自由编辑修改。
+
+script_title: 凡人修仙传·剧本改编
+source_novel: 凡人修仙传
+source_author: 忘语
+adaptor: novel2script v0.1.0
+generated_at: 2026-06-05T10:00:00+08:00
+version: "0.1.0"
+metadata:
+  genre:
+    - 仙侠
+    - 玄幻
+  original_language: zh-CN
+  target_format: screenplay
+  total_novel_chapters: 5
+  total_novel_chars: 15000
+  adaptation_coverage: 1-5章
+  synopsis: 一个普通的山村少年韩立，因母亲病重冒险进入黑风岭采药，意外遇到修仙者墨居仁，被收为弟子，从此踏上了修仙之路。
+  estimated_total_scenes: 12
+characters:
+  - id: char_hanli
+    name: 韩立
+    aliases:
+      - 韩跑跑
+      - 韩师叔
+    role: protagonist
+    importance_rank: 1
+    description: 十五六岁的山村少年，相貌普通，性格谨慎坚韧，重孝道。
+    archetype: 普通人崛起
+    traits:
+      - 谨慎
+      - 坚韧
+      - 重情义
+      - 孝顺
+    character_arc: 从山村采药少年成长为修仙者
+    first_appearance_chapter: 1
+    relationships:
+      - target_id: char_mojuren
+        type: 师徒
+        description: 墨居仁是韩立的修仙引路人
+        first_interaction_chapter: 2
+      - target_id: char_hanmu
+        type: 母子
+        description: 韩立为救母亲冒险采药
+        first_interaction_chapter: 1
+  - id: char_hanmu
+    name: 韩母
+    role: supporting
+    importance_rank: 2
+    description: 韩立的母亲，体弱多病，在丈夫去世后独自抚养韩立长大。
+    traits:
+      - 慈爱
+      - 体弱
+    first_appearance_chapter: 1
+  - id: char_mojuren
+    name: 墨居仁
+    aliases:
+      - 墨师
+    role: supporting
+    importance_rank: 3
+    description: 太岳门长老，六七十岁的老者，面容清瘦却目光如电，修为深不可测。
+    archetype: 高人隐士
+    traits:
+      - 严厉
+      - 惜才
+    character_arc: 从隐居长老到收徒传道
+    first_appearance_chapter: 2
+  - id: char_wangshen
+    name: 王婶
+    role: cameo
+    description: 韩立隔壁的邻居，热心肠的普通妇人。
+    first_appearance_chapter: 1
+acts:
+  - id: act_1
+    title: 第一幕：平凡中的不平凡
+    summary: 韩立的日常生活与母亲的病情驱动，促使他冒险进入黑风岭。
+    chapter_range: 1-2
+    scenes:
+      - id: scene_1_1
+        type: scene
+        title: 青牛镇·韩立归家
+        sequence: 1
+        setting:
+          location: 青牛镇
+          location_type: 城镇
+          time_of_day: 清晨
+          atmosphere: 宁静而朴素
+          weather: 薄雾
+          era: 天南国时期
+        summary: 韩立清晨采药归来，与王婶寒暄后回家，发现母亲病情加重。
+        chapter_source: 1
+        estimated_duration: 3min
+        mood: 日常
+        characters_present:
+          - id: char_hanli
+            state: 采药归家
+          - id: char_wangshen
+            state: 在门口择菜
+        elements:
+          - id: elem_1_1
+            type: action
+            content: 清晨薄雾未散，青牛镇的石板路上空无一人。韩立背着药篓从山道走下来，粗布衣裳被晨露打湿。
+            source_paragraph: 1
+            visual_cue: 远景，山道，人物由远及近
+          - id: elem_1_2
+            type: dialogue
+            speaker_id: char_wangshen
+            speaker_name: 王婶
+            tone: ""
+            content: 立儿，今天这么早就回来了？
+            delivery: 抬头招呼
+            language_style: 口语
+          - id: elem_1_3
+            type: dialogue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            tone: ""
+            content: 王婶早。山上晨露重，草药的药性在日出前最好，所以就早起了一个时辰。
+            delivery: 笑着应答
+          - id: elem_1_4
+            type: action
+            content: 韩立快步走向自家小院。三间土坯房，院子里晒着半干的草药。
+            visual_cue: 跟拍，推至小院
+          - id: elem_1_5
+            type: action
+            content: 屋内传来剧烈的咳嗽声。韩立面色一紧，放下药篓快步进屋。
+            visual_cue: 切至室内
+          - id: elem_1_6
+            type: dialogue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            tone: ""
+            content: 娘，您又咳了？
+            delivery: 握住母亲的手，语气关切
+          - id: elem_1_7
+            type: dialogue
+            speaker_id: char_hanmu
+            speaker_name: 韩母
+            tone: ""
+            content: 不碍事，老毛病了。
+            delivery: 摆摆手，声音虚弱
+          - id: elem_1_8
+            type: internal_monologue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            content: 郎中说需要凝露草做药引，只有黑风岭深处才有。我必须去一趟。
+            visibility: 画外音
+        transition:
+          type: fade_to
+          next_scene_hint: 次日凌晨，韩立离家
+      - id: scene_1_2
+        type: scene
+        title: 黑风岭·采药遇险
+        sequence: 2
+        setting:
+          location: 黑风岭
+          location_type: 荒野
+          time_of_day: 正午
+          atmosphere: 阴森危险
+          weather: 浓雾
+          era: 天南国时期
+        summary: 韩立冒险进入黑风岭深处寻找凝露草，遭遇毒蛇袭击后成功采集到草药，却遇岩石松动险坠山涧。
+        chapter_source: 2
+        estimated_duration: 5min
+        mood: 紧张
+        characters_present:
+          - id: char_hanli
+            state: 冒险采药
+        elements:
+          - id: elem_2_1
+            type: action
+            content: 黑风岭山势险峻，浓雾笼罩。韩立一手握镰刀，一手攀着岩石，沿山溪向上搜寻。
+            visual_cue: 大全景，山岭，小人在攀爬
+          - id: elem_2_2
+            type: internal_monologue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            content: 凝露草喜阴湿，长在靠近溪流的岩石缝里。应该就在这附近。
+            visibility: 画外音
+          - id: elem_2_3
+            type: action
+            content: 草丛中传来窸窣声。一条碧绿毒蛇从岩石后猛地弹起，直扑韩立面门。
+            visual_cue: 近景，蛇扑向镜头
+          - id: elem_2_4
+            type: action
+            content: 电光石火间，韩立挥出镰刀，毒蛇断成两截落在地上，兀自扭动。
+            visual_cue: 快速剪辑，镰刀轨迹
+          - id: elem_2_5
+            type: action
+            content: 韩立大口喘气，额头渗出冷汗。
+          - id: elem_2_6
+            type: action
+            content: 前方岩壁上，几株通体银白的草叶散发着淡淡萤光。
+            visual_cue: 推近，凝露草特写
+          - id: elem_2_7
+            type: internal_monologue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            content: 凝露草！娘有救了！
+            visibility: 画外音
+          - id: elem_2_8
+            type: action
+            content: 韩立小心采集凝露草。就在他采下最后一株时，脚下岩石松动，整个人向后仰倒——下面是数十丈深的山涧。
+            visual_cue: 慢动作，岩石碎裂，人物后仰
+        transition:
+          type: cut_to
+          next_scene_hint: 墨居仁出场
+      - id: scene_1_3
+        type: scene
+        title: 黑风岭·拜师
+        sequence: 3
+        setting:
+          location: 黑风岭山腰
+          location_type: 荒野
+          time_of_day: 正午
+          atmosphere: 峰回路转
+          weather: 浓雾
+          era: 天南国时期
+        summary: 墨居仁出手救下韩立，看出韩立的修仙资质，决定收其为徒。
+        chapter_source: 3
+        estimated_duration: 4min
+        mood: 转折
+        characters_present:
+          - id: char_hanli
+            state: 惊魂未定
+          - id: char_mojuren
+            state: 观察韩立
+        elements:
+          - id: elem_3_1
+            type: action
+            content: 千钧一发之际，一只干瘦却有力的手稳稳抓住韩立的胳膊。
+            visual_cue: 特写，手臂被抓住
+          - id: elem_3_2
+            type: action
+            content: 韩立抬头，只见一位灰袍老者立于岩石之上，面容清瘦，双眼却格外明亮有神。
+            visual_cue: 仰角镜头，老者在高处
+          - id: elem_3_3
+            type: dialogue
+            speaker_id: char_mojuren
+            speaker_name: 墨居仁
+            tone: ""
+            content: 小娃娃，这地方可不是你该来的。
+            delivery: 声音平淡，不容置疑
+          - id: elem_3_4
+            type: action
+            content: 老者轻轻一提，将韩立拉上安全地带。
+          - id: elem_3_5
+            type: dialogue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            tone: ""
+            content: 多谢前辈救命之恩。
+            delivery: 深深一礼
+          - id: elem_3_6
+            type: action
+            content: 墨居仁的目光落在韩立腰间布袋——几株银白凝露草从中露出。
+          - id: elem_3_7
+            type: dialogue
+            speaker_id: char_mojuren
+            speaker_name: 墨居仁
+            tone: ""
+            content: 你知道这东西是给凡人治病的，却敢一个人来黑风岭，倒是有几分胆色。
+          - id: elem_3_8
+            type: dialogue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            tone: ""
+            content: 家母病重，郎中说了，唯有凝露草才能保住性命。
+          - id: elem_3_9
+            type: action
+            content: 墨居仁微微颔首，忽然目光一凝——他感应到了什么。
+          - id: elem_3_10
+            type: dialogue
+            speaker_id: char_mojuren
+            speaker_name: 墨居仁
+            tone: ""
+            content: 小子，你可愿拜我为师？
+          - id: elem_3_11
+            type: action
+            content: 韩立愣住片刻。
+          - id: elem_3_12
+            type: internal_monologue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            content: 修仙？太岳门？那些神仙传说竟然是真的……
+            visibility: 画外音
+          - id: elem_3_13
+            type: action
+            content: 韩立毫不犹豫跪地叩头。
+          - id: elem_3_14
+            type: dialogue
+            speaker_id: char_hanli
+            speaker_name: 韩立
+            tone: ""
+            content: 前辈……不，师父在上，请受弟子一拜！
+        transition:
+          type: fade_to
+          next_scene_hint: 三日后，十里亭
