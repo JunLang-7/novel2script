@@ -42,8 +42,8 @@ func NormalizeDialogue(elements []models.ScriptElement) []models.ScriptElement {
 				if elements[i].Tone == "" && tone != "" {
 					elements[i].Tone = tone
 				}
-				content = content[:idx+len([]rune(content[:idx]))] +
-					"：" + content[idx+len(indicator)+len("："):]
+				content = content[:idx] + "：" +
+					content[idx+len(indicator)+len("："):]
 				elements[i].Content = content
 				break
 			}
