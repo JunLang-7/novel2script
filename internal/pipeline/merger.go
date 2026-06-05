@@ -55,9 +55,15 @@ func (m *CharacterMerger) findExisting(ch *models.Character) (int, bool) {
 			return idx, true
 		}
 	}
-	// 检查结果中角色的别名是否包含 ch.Name
+	// ch.Name 可能匹配已有角色的别名
 	if idx, ok := m.aliasIndex[ch.Name]; ok {
 		return idx, true
+	}
+	// ch 的别名可能匹配已有角色的主名（nameIndex）
+	for _, alias := range ch.Aliases {
+		if idx, ok := m.nameIndex[alias]; ok {
+			return idx, true
+		}
 	}
 	return -1, false
 }
