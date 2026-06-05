@@ -109,6 +109,31 @@ func (c *ConvertCommand) Run(args []string) error {
 		return fmt.Errorf("读取文件失败: %w", err)
 	}
 
+	// 应用章节范围过滤
+	if c.startChapter > 0 || c.endChapter > 0 {
+		chapters, err := text.SplitChapters(rawText)
+		if err != nil {
+			return fmt.Errorf("章节检测失败: %w", err)
+		}
+		start := max(c.startChapter-1, 0)
+		end := len(chapters)
+		if c.endChapter > 0 && c.endChapter <= len(chapters) {
+			end = c.endChapter
+		}
+		if start >= len(chapters) {
+			return fmt.Errorf("起始章节 %d 超出总章节数 %d", c.startChapter, len(chapters))
+		}
+		selected := chapters[start:end]
+		var sb strings.Builder
+		for i, ch := range selected {
+			if i > 0 {
+				sb.WriteString("\n\n")
+			}
+			sb.WriteString(ch.Content)
+		}
+		rawText = sb.String()
+	}
+
 	// Dry-run 模式
 	if c.dryRun {
 		return runDryRun(rawText)
@@ -163,13 +188,17 @@ func (c *ConvertCommand) Run(args []string) error {
 		}
 		defer f.Close()
 		return formatters.WriteMarkdown(f, script)
-	default:
+	case "json":
+		return fmt.Errorf("JSON 格式暂未支持，请使用 yaml 或 md 格式")
+	case "yaml", "":
 		f, err := os.Create(c.output)
 		if err != nil {
 			return fmt.Errorf("创建输出文件失败: %w", err)
 		}
 		defer f.Close()
 		return formatters.WriteYAML(f, script)
+	default:
+		return fmt.Errorf("不支持的输出格式: %s，支持 yaml | md", c.format)
 	}
 }
 

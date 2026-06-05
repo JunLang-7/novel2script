@@ -4,8 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/JunLang-7/novel2script/internal/config"
+	"github.com/JunLang-7/novel2script/internal/formatters"
 	"github.com/JunLang-7/novel2script/internal/llm"
 	"github.com/JunLang-7/novel2script/internal/pipeline"
 	"github.com/JunLang-7/novel2script/internal/text"
@@ -109,5 +111,10 @@ func (c *AnalyzeCommand) Run(args []string) error {
 		stats.Duration,
 	)
 
-	return nil
+	f, err := os.Create(c.output)
+	if err != nil {
+		return fmt.Errorf("创建输出文件失败: %w", err)
+	}
+	defer f.Close()
+	return formatters.WriteYAML(f, script)
 }
