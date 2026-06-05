@@ -115,10 +115,7 @@ func (c *Client) Generate(ctx context.Context, sysPrompt, userPrompt string) (*R
 	for attempt := 0; attempt <= c.cfg.MaxRetries; attempt++ {
 		if attempt > 0 {
 			// 指数退避
-			backoff := time.Duration(1<<uint(attempt-1)) * time.Second
-			if backoff > 30*time.Second {
-				backoff = 30 * time.Second
-			}
+			backoff := min(time.Duration(1<<uint(attempt-1))*time.Second, 30*time.Second)
 			select {
 			case <-time.After(backoff):
 			case <-ctx.Done():
@@ -297,7 +294,6 @@ func (c *Client) ParallelGenerate(ctx context.Context, prompts []PromptPair) ([]
 	g, ctx := errgroup.WithContext(ctx)
 
 	for i, p := range prompts {
-		i, p := i, p
 		g.Go(func() error {
 			result, err := c.Generate(ctx, p.System, p.User)
 			results[i] = result

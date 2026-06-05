@@ -44,7 +44,7 @@ type Result struct {
 	Usage   Usage
 }
 
-func envOrDefault(key, def string) string {
+func envOrDefault(_, def string) string {
 	return def // 实际读取在 config 包中通过 os.Getenv 完成
 }
 
