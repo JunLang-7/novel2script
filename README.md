@@ -27,24 +27,37 @@ go build -o novel2script .
 
 ## 快速开始
 
+
 ```bash
-# 设置 API 密钥
+# Anthropic 兼容接口(默认)
 export NOVEL2SCRIPT_API_KEY=sk-ant-xxx
 
-# 转换小说为剧本
-novel2script convert examples/input/凡人修仙传.txt -o examples/ouput/凡人修仙传.yaml --parallel 5
+# OpenAI 兼容接口
+export NOVEL2SCRIPT_API_KEY=sk-xxx
+export NOVEL2SCRIPT_PROVIDER=openai
+export NOVEL2SCRIPT_BASE_URL=https://api.openai.com/chat/completions
+export NOVEL2SCRIPT_MODEL=xxx
 
 # 预览成本（不调用 LLM）
-novel2script convert examples/input/凡人修仙传.txt --dry-run
+novel2script convert 小说.txt --dry-run
 
-# 输出可读的 Markdown 草稿
-novel2script convert examples/input/凡人修仙传.txt -f md -o examples/onput/凡人修仙传.md
+# 输出 Markdown 草稿
+novel2script convert 小说.txt -f md -o draft.md
+
+# 仅分析角色和场景
+novel2script analyze 小说.txt -o analysis.json
 
 # 验证生成的剧本
-novel2script validate examples/ouput/凡人修仙传.yaml
+novel2script validate script.yaml
+```
 
-# 导出 JSON Schema
-novel2script schema -o script-schema.json
+也可在项目根目录创建 `.env` 文件（参考 `.env.example`）：
+
+```bash
+NOVEL2SCRIPT_API_KEY=sk-ant-xxx
+NOVEL2SCRIPT_PROVIDER=anthropic
+NOVEL2SCRIPT_MODEL=claude-sonnet-4-20250514
+NOVEL2SCRIPT_PARALLEL=5
 ```
 
 ## 命令
