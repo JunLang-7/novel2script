@@ -20,13 +20,14 @@ const CharacterExtractionPrompt = `请分析以下小说文本，提取所有重
 - 角色可能有多个称呼（如"韩立"→"韩师叔"→"厉飞雨"），全部收集到aliases中
 - 关系类型请使用中文网文常用词汇（如"道侣""宿敌""护道者"）
 - relationships 中的 target_id 必须填写为目标角色的 id（如 "char_hanli"），不要留空
+- relationships 中的 description 必须包含目标角色的名字（如"韩父是韩立的父亲"），不要用代词替代
 - role 字段取值为: protagonist | deuteragonist | antagonist | supporting | love_interest | cameo
 
 <<输入文本>>
 {text}
 
 请以JSON数组格式返回角色列表，每个角色包含以下字段：
-id (格式为 "char_<拼音名>"), name, aliases (数组), role, importance_rank (整数), description, traits (数组), character_arc, first_appearance_chapter (整数), relationships (数组，每项包含 target_id, type, description)
+id (格式为 "char_<拼音名>"), name, aliases (数组), role, importance_rank (整数), description, traits (数组), character_arc, first_appearance_chapter (整数), relationships (数组，每项包含 target_id, type, description（描述中必须提及对方角色名，如"张三的父亲"而非"他的父亲"）)
 
 只返回JSON数组，不要其他说明。`
 
