@@ -39,7 +39,6 @@ func addSchemaComment(data []byte, script *models.Script) []byte {
 	header := fmt.Sprintf("# novel2script 剧本格式 v%s\n", script.Version)
 	header += fmt.Sprintf("# 原著: %s\n", script.SourceNovel)
 	header += fmt.Sprintf("# 生成时间: %s\n", script.GeneratedAt.Format("2006-01-02 15:04:05"))
-	header += "# schema: https://novel2script.dev/schemas/script-v1.json\n"
 	header += "# 本文件为 AI 辅助生成的剧本初稿，可自由编辑修改。\n\n"
 	return append([]byte(header), data...)
 }
