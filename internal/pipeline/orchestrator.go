@@ -50,6 +50,88 @@ type PipelineStats struct {
 	Duration          time.Duration
 }
 
+// AnalyzeResult 持有分析阶段的中间结果，不包含剧本转换元素。
+type AnalyzeResult struct {
+	Characters   []models.Character
+	Scenes       []models.Scene
+	SourceAuthor string
+	Genre        []string
+	Synopsis     string
+}
+
+// Analyze 仅执行分析阶段（角色提取 + 元数据 + 场景分割），不做剧本转换。
+func (o *Orchestrator) Analyze(ctx context.Context, rawText string) (*AnalyzeResult, *PipelineStats, error) {
+	start := time.Now()
+	stats := &PipelineStats{}
+
+	chapters, err := text.SplitChapters(rawText)
+	if err != nil {
+		return nil, nil, fmt.Errorf("章节检测失败: %w", err)
+	}
+	stats.TotalChapters = len(chapters)
+	stats.TotalChars = len([]rune(rawText))
+	o.log("检测到 %d 个章节，总计约 %s", stats.TotalChapters, text.FormatCharCount(stats.TotalChars))
+
+	if len(chapters) < 3 {
+		o.warn("警告: 检测到的章节数不足3个，分析效果可能不理想")
+	}
+
+	chunks := text.GroupIntoChunks(chapters, o.cfg.TokensPerChunk)
+	stats.NumChunks = len(chunks)
+	o.log("分为 %d 个处理批次", len(chunks))
+
+	// 角色提取
+	o.log("提取角色信息...")
+	characters, charUsage, charCalls, err := o.extractCharacters(ctx, chunks)
+	if err != nil {
+		o.warn("警告: 角色提取失败: %v", err)
+	}
+	stats.NumLLMCalls += charCalls
+	stats.TotalInputTokens += charUsage.InputTokens
+	stats.TotalOutputTokens += charUsage.OutputTokens
+	o.log("提取到 %d 个角色", len(characters))
+
+	fillTargetIDs(characters)
+
+	// 元数据提取
+	o.log("提取元数据...")
+	sourceAuthor, genre, synopsis, metaUsage, err := o.extractMetadata(ctx, chunks)
+	if err != nil {
+		o.warn("警告: 元数据提取失败: %v", err)
+	}
+	stats.NumLLMCalls++
+	stats.TotalInputTokens += metaUsage.InputTokens
+	stats.TotalOutputTokens += metaUsage.OutputTokens
+
+	// 场景分割
+	o.log("分割场景...")
+	sceneMerger := NewSceneMerger()
+	for _, chunk := range chunks {
+		scenes, usage, err := o.analyzeScenes(ctx, chunk, characters)
+		if err != nil {
+			o.warn("警告: 场景分割失败(chunk %s): %v", chunk.ID, err)
+			continue
+		}
+		sceneMerger.Add(scenes)
+		stats.NumLLMCalls++
+		stats.TotalInputTokens += usage.InputTokens
+		stats.TotalOutputTokens += usage.OutputTokens
+	}
+	scenes := sceneMerger.Result()
+	o.log("分割出 %d 个场景", len(scenes))
+
+	stats.Duration = time.Since(start)
+	o.log("分析完成，耗时 %v", stats.Duration.Round(time.Millisecond))
+
+	return &AnalyzeResult{
+		Characters:   characters,
+		Scenes:       scenes,
+		SourceAuthor: sourceAuthor,
+		Genre:        genre,
+		Synopsis:     synopsis,
+	}, stats, nil
+}
+
 // Run 执行完整的转换管道。
 func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script, *PipelineStats, error) {
 	start := time.Now()

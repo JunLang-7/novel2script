@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/JunLang-7/novel2script/internal/config"
-	"github.com/JunLang-7/novel2script/internal/formatters"
 	"github.com/JunLang-7/novel2script/internal/llm"
 	"github.com/JunLang-7/novel2script/internal/pipeline"
 	"github.com/JunLang-7/novel2script/internal/text"
@@ -97,19 +97,23 @@ func (c *AnalyzeCommand) Run(args []string) error {
 		Verbose:        c.verbose,
 	})
 
-	// 仅运行分析和分割（不转换剧本元素）
-	// 实际实现中，orchestrator 可以配置模式
-	script, stats, err := orch.Run(context.Background(), rawText)
+	// 仅运行分析阶段（角色提取 + 场景分割），不做剧本转换
+	result, stats, err := orch.Analyze(context.Background(), rawText)
 	if err != nil {
 		return fmt.Errorf("分析失败: %w", err)
 	}
 
-	fmt.Printf("分析完成 | 章节: %d | 字数: %s | 场景: %d | 角色: %d | 耗时: %v\n",
+	fmt.Printf("分析完成 | 章节: %d | 字数: %s | 角色: %d | 场景: %d | LLM调用: %d | 耗时: %v\n",
 		stats.TotalChapters,
 		text.FormatCharCount(stats.TotalChars),
+		len(result.Characters),
+		len(result.Scenes),
 		stats.NumLLMCalls,
-		len(script.Characters),
 		stats.Duration,
+	)
+	fmt.Printf("输入 tokens: %d | 输出 tokens: %d\n",
+		stats.TotalInputTokens,
+		stats.TotalOutputTokens,
 	)
 
 	if err := os.MkdirAll(filepath.Dir(c.output), 0755); err != nil {
@@ -120,5 +124,8 @@ func (c *AnalyzeCommand) Run(args []string) error {
 		return fmt.Errorf("创建输出文件失败: %w", err)
 	}
 	defer f.Close()
-	return formatters.WriteYAML(f, script)
+
+	enc := json.NewEncoder(f)
+	enc.SetIndent("", "  ")
+	return enc.Encode(result)
 }
