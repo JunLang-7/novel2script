@@ -184,6 +184,8 @@ func (c *ConvertCommand) Run(args []string) error {
 		fmt.Fprintf(os.Stderr, "  总字数: %s\n", text.FormatCharCount(stats.TotalChars))
 		fmt.Fprintf(os.Stderr, "  处理批次: %d\n", stats.NumChunks)
 		fmt.Fprintf(os.Stderr, "  LLM调用次数: %d\n", stats.NumLLMCalls)
+		fmt.Fprintf(os.Stderr, "  输入 tokens: %d\n", stats.TotalInputTokens)
+		fmt.Fprintf(os.Stderr, "  输出 tokens: %d\n", stats.TotalOutputTokens)
 		fmt.Fprintf(os.Stderr, "  耗时: %v\n", stats.Duration)
 	}
 

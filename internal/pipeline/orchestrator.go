@@ -75,11 +75,11 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 
 	// Step 2: 角色提取
 	o.log("提取角色信息...")
-	characters, charUsage, err := o.extractCharacters(ctx, chunks)
+	characters, charUsage, charCalls, err := o.extractCharacters(ctx, chunks)
 	if err != nil {
 		o.warn("警告: 角色提取失败: %v", err)
 	}
-	stats.NumLLMCalls++
+	stats.NumLLMCalls += charCalls
 	stats.TotalInputTokens += charUsage.InputTokens
 	stats.TotalOutputTokens += charUsage.OutputTokens
 	o.log("提取到 %d 个角色", len(characters))
@@ -164,38 +164,43 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 }
 
 // extractCharacters 执行多级渐进式角色提取。
-func (o *Orchestrator) extractCharacters(ctx context.Context, chunks []text.Chunk) ([]models.Character, llm.Usage, error) {
+func (o *Orchestrator) extractCharacters(ctx context.Context, chunks []text.Chunk) ([]models.Character, llm.Usage, int, error) {
 	merger := NewCharacterMerger()
 	totalUsage := llm.Usage{}
+	numCalls := 0
 
 	// Pass 1: 前3章精细提取
 	if len(chunks) > 0 {
 		firstChunk := chunks[0]
-		// 只取前3章的内容
 		pass1Text := firstChunk.Text
 		prompt := strings.Replace(llm.CharacterExtractionPrompt, "{text}", pass1Text, 1)
 
-		characters, err := llm.StructuredGenerate[[]models.Character](ctx, o.client, llm.SystemPrompt, prompt)
+		characters, usage, err := llm.StructuredGenerate[[]models.Character](ctx, o.client, llm.SystemPrompt, prompt)
+		totalUsage.InputTokens += usage.InputTokens
+		totalUsage.OutputTokens += usage.OutputTokens
+		numCalls++
 		if err == nil {
 			merger.Add(characters)
 		} else {
-			return nil, totalUsage, fmt.Errorf("Pass1角色提取失败: %w", err)
+			return nil, totalUsage, numCalls, fmt.Errorf("Pass1角色提取失败: %w", err)
 		}
 	}
 
-	// Pass 2: 后续每50章批量提取新角色（此处简化为每个chunk）
-	// 实际上对于小于50章的小说，Pass1已经足够
+	// Pass 2: 后续每50章批量提取新角色
 	if len(chunks) > 1 {
 		for _, chunk := range chunks[1:] {
 			prompt := strings.Replace(llm.CharacterExtractionPrompt, "{text}", chunk.Text, 1)
-			characters, err := llm.StructuredGenerate[[]models.Character](ctx, o.client, llm.SystemPrompt, prompt)
+			characters, usage, err := llm.StructuredGenerate[[]models.Character](ctx, o.client, llm.SystemPrompt, prompt)
+			totalUsage.InputTokens += usage.InputTokens
+			totalUsage.OutputTokens += usage.OutputTokens
+			numCalls++
 			if err == nil {
 				merger.Add(characters)
 			}
 		}
 	}
 
-	return merger.Result(), totalUsage, nil
+	return merger.Result(), totalUsage, numCalls, nil
 }
 
 // extractMetadata 从小说开头提取元数据（作者、类型、梗概）。
@@ -213,12 +218,12 @@ func (o *Orchestrator) extractMetadata(ctx context.Context, chunks []text.Chunk)
 		Synopsis     string   `json:"synopsis"`
 	}
 
-	meta, err := llm.StructuredGenerate[llmMetadata](ctx, o.client, llm.SystemPrompt, prompt)
+	meta, usage, err := llm.StructuredGenerate[llmMetadata](ctx, o.client, llm.SystemPrompt, prompt)
 	if err != nil {
 		return "", nil, "", llm.Usage{}, err
 	}
 
-	return meta.SourceAuthor, meta.Genre, meta.Synopsis, llm.Usage{}, nil
+	return meta.SourceAuthor, meta.Genre, meta.Synopsis, usage, nil
 }
 
 // analyzeScenes 对一个chunk进行场景分割。
@@ -240,7 +245,7 @@ func (o *Orchestrator) analyzeScenes(ctx context.Context, chunk text.Chunk, char
 		CharactersPresent []models.CharacterPresence  `json:"characters_present"`
 	}
 
-	rawScenes, err := llm.StructuredGenerate[[]llmScene](ctx, o.client, llm.SystemPrompt, prompt)
+	rawScenes, usage, err := llm.StructuredGenerate[[]llmScene](ctx, o.client, llm.SystemPrompt, prompt)
 	if err != nil {
 		return nil, llm.Usage{}, err
 	}
@@ -265,7 +270,7 @@ func (o *Orchestrator) analyzeScenes(ctx context.Context, chunk text.Chunk, char
 		}
 	}
 
-	return scenes, llm.Usage{}, nil
+	return scenes, usage, nil
 }
 
 // convertScene 将一个场景转换为剧本元素序列。
@@ -299,7 +304,7 @@ func (o *Orchestrator) convertScene(ctx context.Context, scene *models.Scene, ch
 		Visibility   string `json:"visibility,omitempty"`
 	}
 
-	rawElements, err := llm.StructuredGenerate[[]llmElement](ctx, o.client, llm.SystemPrompt, prompt)
+	rawElements, usage, err := llm.StructuredGenerate[[]llmElement](ctx, o.client, llm.SystemPrompt, prompt)
 	if err != nil {
 		return nil, llm.Usage{}, err
 	}
@@ -319,7 +324,7 @@ func (o *Orchestrator) convertScene(ctx context.Context, scene *models.Scene, ch
 		}
 	}
 
-	return elements, llm.Usage{}, nil
+	return elements, usage, nil
 }
 
 func buildCharacterContext(characters []models.Character) string {

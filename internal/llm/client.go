@@ -322,19 +322,19 @@ func (c *Client) ParallelGenerate(ctx context.Context, prompts []PromptPair) ([]
 }
 
 // StructuredGenerate 泛型方法：发送 prompt，将 JSON 响应解析到指定类型。
-func StructuredGenerate[T any](ctx context.Context, c *Client, sysPrompt, userPrompt string) (T, error) {
+func StructuredGenerate[T any](ctx context.Context, c *Client, sysPrompt, userPrompt string) (T, Usage, error) {
 	var zero T
 	result, err := c.Generate(ctx, sysPrompt, userPrompt)
 	if err != nil {
-		return zero, fmt.Errorf("LLM调用失败: %w", err)
+		return zero, Usage{}, fmt.Errorf("LLM调用失败: %w", err)
 	}
 
 	var parsed T
 	if err := json.Unmarshal([]byte(result.RawJSON), &parsed); err != nil {
-		return zero, fmt.Errorf("JSON解析失败: %w\n原始响应: %s", err, truncate(result.RawJSON, 500))
+		return zero, Usage{}, fmt.Errorf("JSON解析失败: %w\n原始响应: %s", err, truncate(result.RawJSON, 500))
 	}
 
-	return parsed, nil
+	return parsed, result.Usage, nil
 }
 
 // RetryableError 表示可以重试的错误。

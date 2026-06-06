@@ -52,7 +52,7 @@ func (a *CharacterAnalyzer) Analyze(ctx context.Context, rawText string) ([]mode
 	pass1Text := joinChapters(chapters[:pass1End])
 	if pass1Text != "" {
 		prompt := strings.Replace(llm.CharacterExtractionPrompt, "{text}", pass1Text, 1)
-		chars, err := llm.StructuredGenerate[[]models.Character](ctx, a.client, llm.SystemPrompt, prompt)
+		chars, _, err := llm.StructuredGenerate[[]models.Character](ctx, a.client, llm.SystemPrompt, prompt)
 		if err != nil {
 			return nil, fmt.Errorf("Pass1角色提取失败: %w", err)
 		}
@@ -78,7 +78,7 @@ func (a *CharacterAnalyzer) Analyze(ctx context.Context, rawText string) ([]mode
 		for i, bt := range batchTexts {
 			g.Go(func() error {
 				prompt := strings.Replace(llm.CharacterExtractionPrompt, "{text}", bt, 1)
-				chars, err := llm.StructuredGenerate[[]models.Character](ctx, a.client, llm.SystemPrompt, prompt)
+				chars, _, err := llm.StructuredGenerate[[]models.Character](ctx, a.client, llm.SystemPrompt, prompt)
 				if err == nil {
 					batches[i] = chars
 				}

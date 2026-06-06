@@ -163,7 +163,7 @@ func TestClient_StructuredGenerate(t *testing.T) {
 		Age  int    `json:"age"`
 	}
 
-	person, err := StructuredGenerate[Person](context.Background(), client, "system", "user")
+	person, _, err := StructuredGenerate[Person](context.Background(), client, "system", "user")
 	if err != nil {
 		t.Fatalf("StructuredGenerate failed: %v", err)
 	}
