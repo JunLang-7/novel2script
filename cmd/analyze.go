@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/JunLang-7/novel2script/internal/config"
 	"github.com/JunLang-7/novel2script/internal/llm"
@@ -17,12 +18,14 @@ import (
 
 // AnalyzeCommand 定义 analyze 子命令。
 type AnalyzeCommand struct {
-	flagSet  *flag.FlagSet
-	output   string
-	model    string
-	parallel int
-	verbose  bool
-	resume   bool
+	flagSet      *flag.FlagSet
+	output       string
+	model        string
+	parallel     int
+	verbose      bool
+	resume       bool
+	startChapter int
+	endChapter   int
 }
 
 // NewAnalyzeCommand 创建 analyze 子命令。
@@ -39,6 +42,10 @@ func NewAnalyzeCommand() *AnalyzeCommand {
 	c.flagSet.BoolVar(&c.verbose, "verbose", false, "详细日志")
 	c.flagSet.BoolVar(&c.resume, "r", false, "从上次中断处继续")
 	c.flagSet.BoolVar(&c.resume, "resume", false, "从上次中断处继续")
+	c.flagSet.IntVar(&c.startChapter, "s", 0, "起始章节号（从1开始）")
+	c.flagSet.IntVar(&c.startChapter, "start", 0, "起始章节号（从1开始）")
+	c.flagSet.IntVar(&c.endChapter, "e", 0, "结束章节号")
+	c.flagSet.IntVar(&c.endChapter, "end", 0, "结束章节号")
 	return c
 }
 
@@ -54,10 +61,15 @@ func (c *AnalyzeCommand) Usage() string {
 选项:
   -o, --output     分析结果输出路径 (默认: analysis.json)
   -m, --model      LLM模型名称
-  -p, --parallel   并行LLM调用数
+  -p, --parallel   并行LLM调用数 (默认: 5)
+  -s, --start      起始章节号（从1开始）
+  -e, --end        结束章节号
+  -r, --resume     从上次中断处继续
+  -v, --verbose    详细日志输出
 
 示例:
-  novel2script analyze 小说.txt -o analysis.json`
+  novel2script analyze 小说.txt -o analysis.json
+  novel2script analyze 小说.txt -s 1 -e 10 --resume`
 }
 
 // Run 执行 analyze 命令。
@@ -84,6 +96,30 @@ func (c *AnalyzeCommand) Run(args []string) error {
 	rawText, err := text.DetectAndReadFile(inputPath)
 	if err != nil {
 		return fmt.Errorf("读取文件失败: %w", err)
+	}
+
+	if c.startChapter > 0 || c.endChapter > 0 {
+		chapters, err := text.SplitChapters(rawText)
+		if err != nil {
+			return fmt.Errorf("章节检测失败: %w", err)
+		}
+		start := max(c.startChapter-1, 0)
+		end := len(chapters)
+		if c.endChapter > 0 && c.endChapter <= len(chapters) {
+			end = c.endChapter
+		}
+		if start >= len(chapters) {
+			return fmt.Errorf("起始章节 %d 超出总章节数 %d", c.startChapter, len(chapters))
+		}
+		selected := chapters[start:end]
+		var sb strings.Builder
+		for i, ch := range selected {
+			if i > 0 {
+				sb.WriteString("\n\n")
+			}
+			sb.WriteString(ch.Content)
+		}
+		rawText = sb.String()
 	}
 
 	client := llm.NewClient(llm.Config{
