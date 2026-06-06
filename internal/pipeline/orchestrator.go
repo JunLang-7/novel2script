@@ -91,7 +91,7 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	o.log("分割场景...")
 	sceneMerger := NewSceneMerger()
 	for _, chunk := range chunks {
-		scenes, usage, err := o.analyzeScenes(ctx, chunk)
+		scenes, usage, err := o.analyzeScenes(ctx, chunk, characters)
 		if err != nil {
 			o.warn("警告: 场景分割失败(chunk %s): %v", chunk.ID, err)
 			continue
@@ -187,8 +187,9 @@ func (o *Orchestrator) extractCharacters(ctx context.Context, chunks []text.Chun
 }
 
 // analyzeScenes 对一个chunk进行场景分割。
-func (o *Orchestrator) analyzeScenes(ctx context.Context, chunk text.Chunk) ([]models.Scene, llm.Usage, error) {
-	prompt := strings.Replace(llm.SceneSegmentationPrompt, "{text}", chunk.Text, 1)
+func (o *Orchestrator) analyzeScenes(ctx context.Context, chunk text.Chunk, characters []models.Character) ([]models.Scene, llm.Usage, error) {
+	prompt := strings.Replace(llm.SceneSegmentationPrompt, "{character_context}", buildCharacterContext(characters), 1)
+	prompt = strings.Replace(prompt, "{text}", chunk.Text, 1)
 
 	type llmScene struct {
 		ID                string                      `json:"id"`
