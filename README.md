@@ -224,9 +224,7 @@ novel2script/
 │   └── schema.go                # schema（导出 JSON Schema）
 ├── internal/
 │   ├── models/                  # 数据模型（Script, Scene, Character）
-│   ├── pipeline/                # 管道编排、分块、合并
-│   ├── analyzers/               # 角色提取、场景分割
-│   ├── converters/              # 对话归一化、剧本转换
+│   ├── pipeline/                # 管道编排、分块、合并、角色提取、场景分割
 │   ├── formatters/              # YAML / Markdown 输出
 │   ├── llm/                     # LLM 客户端、提示词、token 估算
 │   ├── text/                    # 章节检测、编码识别
