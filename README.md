@@ -73,6 +73,21 @@ novel2script convert <输入文件> [选项]
   -r, --resume     从上次中断处继续
 ```
 
+### analyze 选项
+
+```
+novel2script analyze <输入文件> [选项]
+
+选项:
+  -o, --output     输出文件路径 (默认: analysis.json)
+  -s, --start      起始章节号（从 1 开始）
+  -e, --end        结束章节号
+  -m, --model      LLM 模型名称
+  -p, --parallel   并行 LLM 调用数 (默认: 5)
+  -r, --resume     从上次中断处继续
+  -v, --verbose    详细日志输出
+```
+
 ### 断点续传
 
 使用 `--resume` 启用 SQLite 缓存，中断后可跳过已完成的工作：
