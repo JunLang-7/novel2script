@@ -109,6 +109,12 @@ novel2script convert <输入文件> [选项]
 # 文件头 - 元数据
 script_title: "凡人修仙传·剧本改编"
 source_novel: "凡人修仙传"
+source_author: "忘语"
+...
+metadata:
+  genre: ["仙侠", "玄幻"]
+  total_novel_chapters: 5
+  synopsis: "山村少年韩立偶然踏入修仙之路..."
 ...
 
 # 角色表 - 完整角色信息
@@ -153,14 +159,26 @@ acts:
 输入文件(.txt/.md)
     │
     ▼
-章节检测 ─── 正则匹配章边界，按 ~15000 tokens 分块
-    │
-    ├─ 角色提取 ─── 多级渐进式 + 跨块去重合并
-    ├─ 场景分割 ─── 地点/时间/视角/事件驱动
-    └─ 剧本转换 ─── 叙事→动作，对话→标注对白
+Step 1  章节检测 ─── 正则匹配章边界，按 ~15000 tokens 分块
     │
     ▼
-分幕构建 + 交叉校验 → YAML/Markdown 输出
+Step 2  角色提取 ─── 多级渐进式 + 跨块去重合并
+    │   ├─ Pass 1: 前 3 章精细提取核心角色
+    │   └─ Pass 2: 后续每块批量提取新角色
+    │
+    ├─ fillTargetIDs ─── 自动补全关系中的 target_id（name/alias 索引匹配）
+    │
+    ▼
+Step 2.5 元数据提取 ─── 推断 source_author、genre、synopsis
+    │
+    ▼
+Step 3  场景分割 ─── 地点/时间/视角/事件驱动，注入已知角色 ID
+    │
+    ▼
+Step 4  剧本转换 ─── 叙事→动作，对话→标注对白，场景聚焦约束
+    │
+    ▼
+Step 5  分幕构建 + Step 6 组装 Script → YAML/Markdown 输出
 ```
 
 ## 项目结构
