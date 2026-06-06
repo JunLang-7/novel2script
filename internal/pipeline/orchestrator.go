@@ -335,22 +335,27 @@ func fillTargetIDs(characters []models.Character) {
 	}
 
 	for i := range characters {
-		for j := range characters[i].Relationships {
-			rel := &characters[i].Relationships[j]
+		ch := &characters[i]
+		for j := range ch.Relationships {
+			rel := &ch.Relationships[j]
 			if rel.TargetID != "" {
 				continue
 			}
-			// 在描述中查找已知角色名
-			rel.TargetID = findTargetID(rel.Description, index)
+			// 在描述中查找已知角色名（排除自己避免自引用）
+			rel.TargetID = findTargetID(rel.Description, index, ch.ID)
 		}
 	}
 }
 
 // findTargetID 在文本中查找已索引的角色名，返回对应的 ID。
-func findTargetID(text string, index map[string]string) string {
+// excludeID 用于排除当前角色自身，避免自引用。
+func findTargetID(text string, index map[string]string, excludeID string) string {
 	var bestMatch string
 	bestLen := 0
 	for name, id := range index {
+		if id == excludeID {
+			continue
+		}
 		if len(name) > bestLen && strings.Contains(text, name) {
 			bestMatch = id
 			bestLen = len(name)
