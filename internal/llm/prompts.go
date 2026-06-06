@@ -27,7 +27,7 @@ const CharacterExtractionPrompt = `请分析以下小说文本，提取所有重
 {text}
 
 请以JSON数组格式返回角色列表，每个角色包含以下字段：
-id (格式为 "char_<拼音名>"), name, aliases (数组), role, importance_rank (整数), description, traits (数组), character_arc, first_appearance_chapter (整数), relationships (数组，每项包含 target_id, type, description（描述中必须提及对方角色名，如"张三的父亲"而非"他的父亲"）)
+id (格式为 "char_<拼音名>"), name, aliases (数组), role, importance_rank (整数), description, traits (数组), character_arc (简述角色成长轨迹或命运走向，如"从山村少年成长为大乘修士"), first_appearance_chapter (整数), relationships (数组，每项包含 target_id, type, description（描述中必须提及对方角色名，如"张三的父亲"而非"他的父亲"）)
 
 只返回JSON数组，不要其他说明。`
 
@@ -85,6 +85,23 @@ const ScriptConversionPrompt = `将以下小说场景转换为标准剧本格式
 id (格式为 "elem_<序号>"), type (取值为 action | dialogue | internal_monologue | narration), content (元素内容), speaker_id (如果是dialogue或internal_monologue), speaker_name (如果是dialogue或internal_monologue), tone (如果是dialogue，标注语气), delivery (表演指示，可选), visual_cue (镜头提示，可选)
 
 只返回JSON数组，不要其他说明。`
+
+// MetadataExtractionPrompt 从小说开头提取元数据（作者、类型、梗概）。
+// 占位符: {text}
+const MetadataExtractionPrompt = `请分析以下小说文本，提取元数据信息。
+
+需要提取的信息：
+1. 作者名（source_author）：如果文中有作者署名，提取作者名；否则根据文风推断可能的作者或留空
+2. 小说类型/流派（genre）：判断小说属于哪些类型，如"仙侠""玄幻""言情""武侠""科幻""悬疑""历史"等，可多选
+3. 故事梗概（synopsis）：撰写一段简洁的故事梗概（200字以内），概括前几章展现的主要情节和设定
+
+<<原文>>
+{text}
+
+请以JSON格式返回，包含以下字段：
+source_author (字符串), genre (字符串数组), synopsis (字符串)
+
+只返回JSON，不要其他说明。`
 
 // SynopsisPrompt 梗概生成提示词模板。
 // 占位符: {text}

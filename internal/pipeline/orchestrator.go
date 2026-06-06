@@ -87,6 +87,17 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	// 后处理：补全关系中的 target_id
 	fillTargetIDs(characters)
 
+	// Step 2.5: 提取元数据（作者、类型、梗概）
+	o.log("提取元数据...")
+	sourceAuthor, genre, synopsis, metaUsage, err := o.extractMetadata(ctx, chunks)
+	if err != nil {
+		o.warn("警告: 元数据提取失败: %v", err)
+	}
+	stats.NumLLMCalls++
+	stats.TotalInputTokens += metaUsage.InputTokens
+	stats.TotalOutputTokens += metaUsage.OutputTokens
+	o.log("元数据: 作者=%s, 类型=%v", sourceAuthor, genre)
+
 	// Step 3: 场景分割
 	o.log("分割场景...")
 	sceneMerger := NewSceneMerger()
@@ -128,17 +139,18 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	script := &models.Script{
 		ScriptTitle:  detectScriptTitle(chapters),
 		SourceNovel:  "",
-		SourceAuthor: "",
+		SourceAuthor: sourceAuthor,
 		Adaptor:      "novel2script v0.1.0",
 		GeneratedAt:  time.Now(),
 		Version:      "0.1.0",
 		Metadata: models.Metadata{
+			Genre:                genre,
 			OriginalLanguage:     "zh-CN",
 			TargetFormat:         "screenplay",
 			TotalNovelChapters:   stats.TotalChapters,
 			TotalNovelChars:      stats.TotalChars,
 			AdaptationCoverage:   fmt.Sprintf("1-%d章", stats.TotalChapters),
-			Synopsis:             "",
+			Synopsis:             synopsis,
 			EstimatedTotalScenes: len(scenes),
 		},
 		Characters: characters,
@@ -184,6 +196,29 @@ func (o *Orchestrator) extractCharacters(ctx context.Context, chunks []text.Chun
 	}
 
 	return merger.Result(), totalUsage, nil
+}
+
+// extractMetadata 从小说开头提取元数据（作者、类型、梗概）。
+func (o *Orchestrator) extractMetadata(ctx context.Context, chunks []text.Chunk) (sourceAuthor string, genre []string, synopsis string, usage llm.Usage, err error) {
+	if len(chunks) == 0 {
+		return "", nil, "", llm.Usage{}, nil
+	}
+
+	text := chunks[0].Text
+	prompt := strings.Replace(llm.MetadataExtractionPrompt, "{text}", text, 1)
+
+	type llmMetadata struct {
+		SourceAuthor string   `json:"source_author"`
+		Genre        []string `json:"genre"`
+		Synopsis     string   `json:"synopsis"`
+	}
+
+	meta, err := llm.StructuredGenerate[llmMetadata](ctx, o.client, llm.SystemPrompt, prompt)
+	if err != nil {
+		return "", nil, "", llm.Usage{}, err
+	}
+
+	return meta.SourceAuthor, meta.Genre, meta.Synopsis, llm.Usage{}, nil
 }
 
 // analyzeScenes 对一个chunk进行场景分割。
