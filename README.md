@@ -73,6 +73,21 @@ novel2script convert <输入文件> [选项]
   -r, --resume     从上次中断处继续
 ```
 
+### 断点续传
+
+使用 `--resume` 启用 SQLite 缓存，中断后可跳过已完成的工作：
+
+```bash
+# 首次运行（失败中断后重新执行，跳过已完成的 chunk）
+novel2script convert 凡人修仙传.txt --resume -v -o script.yaml
+```
+
+缓存内容：
+- **角色表** — 按小说内容哈希缓存，同一小说不同文件可复用
+- **场景分割结果** — 按 chunk 缓存，已完成的 chunk 直接恢复
+
+缓存目录默认为 `~/.novel2script/cache`，可通过 `NOVEL2SCRIPT_CACHE_DIR` 环境变量修改。
+
 ## 配置
 
 通过环境变量配置：
@@ -162,7 +177,7 @@ acts:
 Step 1  章节检测 ─── 正则匹配章边界，按 ~15000 tokens 分块
     │
     ▼
-Step 2  角色提取 ─── 多级渐进式 + 跨块去重合并
+Step 2  角色提取 ─── 多级渐进式 + 跨块去重合并（--resume 缓存角色表）
     │   ├─ Pass 1: 前 3 章精细提取核心角色
     │   └─ Pass 2: 后续每块批量提取新角色
     │
@@ -173,6 +188,7 @@ Step 2.5 元数据提取 ─── 推断 source_author、genre、synopsis
     │
     ▼
 Step 3  场景分割 ─── 地点/时间/视角/事件驱动，注入已知角色 ID
+    │         （--resume 跳过已完成的 chunk，从 SQLite 缓存恢复）
     │
     ▼
 Step 4  剧本转换 ─── 叙事→动作，对话→标注对白，场景聚焦约束

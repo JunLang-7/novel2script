@@ -12,6 +12,7 @@ import (
 	"github.com/JunLang-7/novel2script/internal/formatters"
 	"github.com/JunLang-7/novel2script/internal/llm"
 	"github.com/JunLang-7/novel2script/internal/pipeline"
+	"github.com/JunLang-7/novel2script/internal/storage"
 	"github.com/JunLang-7/novel2script/internal/text"
 )
 
@@ -156,11 +157,22 @@ func (c *ConvertCommand) Run(args []string) error {
 		MaxParallel: cfg.Parallel,
 	})
 
-	// 运行管道
+	// 运行管道（支持断点续传）
+	var cache storage.Cache
+	if c.resume {
+		sqliteCache, err := storage.NewSQLiteCache(cfg.CacheDir)
+		if err != nil {
+			return fmt.Errorf("创建缓存失败: %w", err)
+		}
+		defer sqliteCache.Close()
+		cache = sqliteCache
+	}
+
 	orch := pipeline.NewOrchestrator(client, pipeline.OrchestratorConfig{
 		TokensPerChunk: 15000,
 		Parallelism:    cfg.Parallel,
 		Verbose:        c.verbose,
+		Cache:          cache,
 	})
 
 	script, stats, err := orch.Run(context.Background(), rawText)
