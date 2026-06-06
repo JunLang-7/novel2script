@@ -86,7 +86,7 @@ func (a *SceneAnalyzer) Analyze(ctx context.Context, rawText string) ([]models.S
 func (a *SceneAnalyzer) analyzeChunk(ctx context.Context, chunk text.Chunk) ([]models.Scene, error) {
 	prompt := strings.Replace(llm.SceneSegmentationPrompt, "{text}", chunk.Text, 1)
 
-	rawScenes, err := llm.StructuredGenerate[[]llmScene](ctx, a.client, llm.SystemPrompt, prompt)
+	rawScenes, _, err := llm.StructuredGenerate[[]llmScene](ctx, a.client, llm.SystemPrompt, prompt)
 	if err != nil {
 		return nil, err
 	}
