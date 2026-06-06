@@ -11,6 +11,7 @@ import (
 	"github.com/JunLang-7/novel2script/internal/config"
 	"github.com/JunLang-7/novel2script/internal/llm"
 	"github.com/JunLang-7/novel2script/internal/pipeline"
+	"github.com/JunLang-7/novel2script/internal/storage"
 	"github.com/JunLang-7/novel2script/internal/text"
 )
 
@@ -21,6 +22,7 @@ type AnalyzeCommand struct {
 	model    string
 	parallel int
 	verbose  bool
+	resume   bool
 }
 
 // NewAnalyzeCommand 创建 analyze 子命令。
@@ -35,6 +37,8 @@ func NewAnalyzeCommand() *AnalyzeCommand {
 	c.flagSet.IntVar(&c.parallel, "parallel", 0, "并行LLM调用数")
 	c.flagSet.BoolVar(&c.verbose, "v", false, "详细日志")
 	c.flagSet.BoolVar(&c.verbose, "verbose", false, "详细日志")
+	c.flagSet.BoolVar(&c.resume, "r", false, "从上次中断处继续")
+	c.flagSet.BoolVar(&c.resume, "resume", false, "从上次中断处继续")
 	return c
 }
 
@@ -91,10 +95,21 @@ func (c *AnalyzeCommand) Run(args []string) error {
 		MaxParallel: cfg.Parallel,
 	})
 
+	var cache storage.Cache
+	if c.resume {
+		sqliteCache, err := storage.NewSQLiteCache(cfg.CacheDir)
+		if err != nil {
+			return fmt.Errorf("创建缓存失败: %w", err)
+		}
+		defer sqliteCache.Close()
+		cache = sqliteCache
+	}
+
 	orch := pipeline.NewOrchestrator(client, pipeline.OrchestratorConfig{
 		TokensPerChunk: 15000,
 		Parallelism:    cfg.Parallel,
 		Verbose:        c.verbose,
+		Cache:          cache,
 	})
 
 	// 仅运行分析阶段（角色提取 + 场景分割），不做剧本转换

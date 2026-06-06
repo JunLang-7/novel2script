@@ -9,6 +9,7 @@ import (
 
 	"github.com/JunLang-7/novel2script/internal/llm"
 	"github.com/JunLang-7/novel2script/internal/models"
+	"github.com/JunLang-7/novel2script/internal/storage"
 	"github.com/JunLang-7/novel2script/internal/text"
 )
 
@@ -16,6 +17,7 @@ import (
 type Orchestrator struct {
 	client *llm.Client
 	cfg    OrchestratorConfig
+	cache  storage.Cache
 }
 
 // OrchestratorConfig 配置管道行为。
@@ -23,6 +25,7 @@ type OrchestratorConfig struct {
 	TokensPerChunk int
 	Parallelism    int
 	Verbose        bool
+	Cache          storage.Cache // 可选缓存，用于断点续传
 }
 
 // DefaultOrchestratorConfig 返回默认配置。
@@ -36,7 +39,7 @@ func DefaultOrchestratorConfig() OrchestratorConfig {
 
 // NewOrchestrator 创建管道协调器。
 func NewOrchestrator(client *llm.Client, cfg OrchestratorConfig) *Orchestrator {
-	return &Orchestrator{client: client, cfg: cfg}
+	return &Orchestrator{client: client, cfg: cfg, cache: cfg.Cache}
 }
 
 // PipelineStats 记录管道执行的统计信息。
@@ -80,16 +83,27 @@ func (o *Orchestrator) Analyze(ctx context.Context, rawText string) (*AnalyzeRes
 	stats.NumChunks = len(chunks)
 	o.log("分为 %d 个处理批次", len(chunks))
 
-	// 角色提取
+	novelHash := storage.NovelHash(rawText)
+
+	// 角色提取（支持缓存恢复）
 	o.log("提取角色信息...")
-	characters, charUsage, charCalls, err := o.extractCharacters(ctx, chunks)
-	if err != nil {
-		o.warn("警告: 角色提取失败: %v", err)
+	var characters []models.Character
+	var charUsage llm.Usage
+	var charCalls int
+	if cached, ok := o.loadCharacters(ctx, novelHash); ok {
+		characters = cached
+		o.log("从缓存恢复 %d 个角色", len(characters))
+	} else {
+		characters, charUsage, charCalls, err = o.extractCharacters(ctx, chunks)
+		if err != nil {
+			o.warn("警告: 角色提取失败: %v", err)
+		}
+		stats.NumLLMCalls += charCalls
+		stats.TotalInputTokens += charUsage.InputTokens
+		stats.TotalOutputTokens += charUsage.OutputTokens
+		o.log("提取到 %d 个角色", len(characters))
+		o.saveCharacters(ctx, novelHash, characters)
 	}
-	stats.NumLLMCalls += charCalls
-	stats.TotalInputTokens += charUsage.InputTokens
-	stats.TotalOutputTokens += charUsage.OutputTokens
-	o.log("提取到 %d 个角色", len(characters))
 
 	fillTargetIDs(characters)
 
@@ -103,10 +117,17 @@ func (o *Orchestrator) Analyze(ctx context.Context, rawText string) (*AnalyzeRes
 	stats.TotalInputTokens += metaUsage.InputTokens
 	stats.TotalOutputTokens += metaUsage.OutputTokens
 
-	// 场景分割
+	// 场景分割（支持缓存跳过已完成 chunk）
 	o.log("分割场景...")
 	sceneMerger := NewSceneMerger()
 	for _, chunk := range chunks {
+		if o.isChunkCached(ctx, chunk.ID) {
+			if scenes, ok := o.loadChunkScenes(ctx, chunk.ID); ok {
+				sceneMerger.Add(scenes)
+				o.log("从缓存恢复 chunk %s 的场景", chunk.ID)
+				continue
+			}
+		}
 		scenes, usage, err := o.analyzeScenes(ctx, chunk, characters)
 		if err != nil {
 			o.warn("警告: 场景分割失败(chunk %s): %v", chunk.ID, err)
@@ -116,6 +137,7 @@ func (o *Orchestrator) Analyze(ctx context.Context, rawText string) (*AnalyzeRes
 		stats.NumLLMCalls++
 		stats.TotalInputTokens += usage.InputTokens
 		stats.TotalOutputTokens += usage.OutputTokens
+		o.saveChunkResult(ctx, chunk.ID, scenes, usage)
 	}
 	scenes := sceneMerger.Result()
 	o.log("分割出 %d 个场景", len(scenes))
@@ -155,16 +177,27 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	stats.NumChunks = len(chunks)
 	o.log("分为 %d 个处理批次", len(chunks))
 
-	// Step 2: 角色提取
+	novelHash := storage.NovelHash(rawText)
+
+	// Step 2: 角色提取（支持缓存恢复）
 	o.log("提取角色信息...")
-	characters, charUsage, charCalls, err := o.extractCharacters(ctx, chunks)
-	if err != nil {
-		o.warn("警告: 角色提取失败: %v", err)
+	var characters []models.Character
+	var charUsage llm.Usage
+	var charCalls int
+	if cached, ok := o.loadCharacters(ctx, novelHash); ok {
+		characters = cached
+		o.log("从缓存恢复 %d 个角色", len(characters))
+	} else {
+		characters, charUsage, charCalls, err = o.extractCharacters(ctx, chunks)
+		if err != nil {
+			o.warn("警告: 角色提取失败: %v", err)
+		}
+		stats.NumLLMCalls += charCalls
+		stats.TotalInputTokens += charUsage.InputTokens
+		stats.TotalOutputTokens += charUsage.OutputTokens
+		o.log("提取到 %d 个角色", len(characters))
+		o.saveCharacters(ctx, novelHash, characters)
 	}
-	stats.NumLLMCalls += charCalls
-	stats.TotalInputTokens += charUsage.InputTokens
-	stats.TotalOutputTokens += charUsage.OutputTokens
-	o.log("提取到 %d 个角色", len(characters))
 
 	// 后处理：补全关系中的 target_id
 	fillTargetIDs(characters)
@@ -180,10 +213,17 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 	stats.TotalOutputTokens += metaUsage.OutputTokens
 	o.log("元数据: 作者=%s, 类型=%v", sourceAuthor, genre)
 
-	// Step 3: 场景分割
+	// Step 3: 场景分割（支持缓存跳过已完成 chunk）
 	o.log("分割场景...")
 	sceneMerger := NewSceneMerger()
 	for _, chunk := range chunks {
+		if o.isChunkCached(ctx, chunk.ID) {
+			if scenes, ok := o.loadChunkScenes(ctx, chunk.ID); ok {
+				sceneMerger.Add(scenes)
+				o.log("从缓存恢复 chunk %s 的场景", chunk.ID)
+				continue
+			}
+		}
 		scenes, usage, err := o.analyzeScenes(ctx, chunk, characters)
 		if err != nil {
 			o.warn("警告: 场景分割失败(chunk %s): %v", chunk.ID, err)
@@ -193,6 +233,7 @@ func (o *Orchestrator) Run(ctx context.Context, rawText string) (*models.Script,
 		stats.NumLLMCalls++
 		stats.TotalInputTokens += usage.InputTokens
 		stats.TotalOutputTokens += usage.OutputTokens
+		o.saveChunkResult(ctx, chunk.ID, scenes, usage)
 	}
 	scenes := sceneMerger.Result()
 	o.log("分割出 %d 个场景", len(scenes))
@@ -442,6 +483,69 @@ func (o *Orchestrator) log(format string, args ...any) {
 // warn 总是输出警告信息到 stderr。
 func (o *Orchestrator) warn(format string, args ...any) {
 	log.Printf("[novel2script] "+format, args...)
+}
+
+// --- 缓存辅助方法 ---
+
+func (o *Orchestrator) loadCharacters(ctx context.Context, novelHash string) ([]models.Character, bool) {
+	if o.cache == nil {
+		return nil, false
+	}
+	chars, ok, err := o.cache.GetCharacterRegistry(ctx, novelHash)
+	if err != nil {
+		o.warn("警告: 读取角色缓存失败: %v", err)
+		return nil, false
+	}
+	return chars, ok
+}
+
+func (o *Orchestrator) saveCharacters(ctx context.Context, novelHash string, characters []models.Character) {
+	if o.cache == nil {
+		return
+	}
+	if err := o.cache.PutCharacterRegistry(ctx, novelHash, characters); err != nil {
+		o.warn("警告: 保存角色缓存失败: %v", err)
+	}
+}
+
+func (o *Orchestrator) isChunkCached(ctx context.Context, chunkID string) bool {
+	if o.cache == nil {
+		return false
+	}
+	ok, err := o.cache.IsComplete(ctx, chunkID)
+	if err != nil {
+		o.warn("警告: 检查缓存状态失败: %v", err)
+		return false
+	}
+	return ok
+}
+
+func (o *Orchestrator) loadChunkScenes(ctx context.Context, chunkID string) ([]models.Scene, bool) {
+	if o.cache == nil {
+		return nil, false
+	}
+	result, ok, err := o.cache.GetChunkResult(ctx, chunkID)
+	if err != nil || !ok {
+		return nil, false
+	}
+	return result.Scenes, true
+}
+
+func (o *Orchestrator) saveChunkResult(ctx context.Context, chunkID string, scenes []models.Scene, usage llm.Usage) {
+	if o.cache == nil {
+		return
+	}
+	if err := o.cache.PutChunkResult(ctx, chunkID, &storage.ChunkResult{
+		Scenes:       scenes,
+		InputTokens:  usage.InputTokens,
+		OutputTokens: usage.OutputTokens,
+	}); err != nil {
+		o.warn("警告: 保存 chunk 缓存失败: %v", err)
+		return
+	}
+	if err := o.cache.MarkComplete(ctx, chunkID); err != nil {
+		o.warn("警告: 标记 chunk 完成失败: %v", err)
+	}
 }
 
 // fillTargetIDs 根据角色名和别名自动补全关系中的 target_id。
