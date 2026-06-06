@@ -1,0 +1,1011 @@
+# novel2script 剧本格式 v0.1.0
+# 原著: 凡人修仙传
+# 生成时间: 2026-06-06 23:02:02
+# 本文件为 AI 辅助生成的剧本初稿，可自由编辑修改。
+
+script_title: 凡人修仙传·剧本改编
+source_novel: 凡人修仙传
+source_author: 忘语
+adaptor: novel2script v0.1.0
+generated_at: 2026-06-06T23:02:02.146688+08:00
+version: 0.1.0
+metadata:
+    genre:
+        - 仙侠
+        - 玄幻
+    original_language: zh-CN
+    target_format: screenplay
+    total_novel_chapters: 5
+    total_novel_chars: 11174
+    adaptation_coverage: 1-5章
+    synopsis: 十岁孩童韩立出身贫寒山村，被其三叔推荐加入江湖门派七玄门。通过艰苦的入门考验后，他成为记名弟子，并被神秘老者墨大夫选中为药童。韩立由此踏上了一条充满奇遇的修仙之路，开启了他从凡人到仙人的蜕变。
+    estimated_total_scenes: 14
+characters:
+    - id: char_hanli
+      name: 韩立
+      aliases:
+        - 二愣子
+      role: protagonist
+      importance_rank: 1
+      description: 韩立，十岁，皮肤黝黑的农家少年，外表普通但内心早熟，向往外面的世界。因三叔引荐参加七玄门入门测试，成为记名弟子，后跟随墨大夫学习医术，最终走上修仙之路。
+      traits:
+        - 早熟
+        - 坚强
+        - 有毅力
+        - 聪明
+        - 孝顺
+      relationships:
+        - target_id: char_hanfu
+          type: 父亲
+          description: 韩父是韩立的父亲
+        - target_id: char_hanmu
+          type: 母亲
+          description: 韩母是韩立的母亲
+        - target_id: char_hanzhu
+          type: 二哥
+          description: 韩铸是韩立的二哥
+        - target_id: char_dage
+          type: 大哥
+          description: 大哥是韩立的大哥
+        - target_id: char_xiaomei
+          type: 妹妹
+          description: 小妹是韩立最疼爱的妹妹
+        - target_id: char_sanshu
+          type: 三叔
+          description: 三叔是韩立的亲三叔
+        - target_id: char_modaifu
+          type: 师父
+          description: 墨大夫是韩立的师父
+        - target_id: char_zhangtie
+          type: 同门
+          description: 张铁与韩立同为记名弟子
+        - target_id: char_wuyan
+          type: 竞争对手
+          description: 舞岩与韩立在入门测试中存在竞争关系
+    - id: char_hanfu
+      name: 韩父
+      role: supporting
+      importance_rank: 2
+      description: 韩立的父亲，老实巴交的农民，依靠种地和打零工维持一家七口生计，在韩母和三叔劝说下同意韩立参加七玄门测试。
+      traits:
+        - 老实
+        - 寡言
+        - 传统
+      relationships:
+        - target_id: char_hanli
+          type: 儿子
+          description: 韩立是韩父的儿子
+        - target_id: char_hanmu
+          type: 夫妻
+          description: 韩母是韩父的妻子
+        - target_id: char_sanshu
+          type: 弟弟
+          description: 三叔是韩父的亲弟弟
+    - id: char_hanmu
+      name: 韩母
+      role: supporting
+      importance_rank: 3
+      description: 韩立的母亲，勤劳的农妇，操持家务，关心子女，对韩立离家感到不舍。
+      traits:
+        - 勤劳
+        - 唠叨
+        - 慈爱
+      relationships:
+        - target_id: char_hanli
+          type: 儿子
+          description: 韩立是韩母的儿子
+        - target_id: char_hanfu
+          type: 夫妻
+          description: 韩父是韩母的丈夫
+    - id: char_hanzhu
+      name: 韩铸
+      aliases:
+        - 二哥
+      role: supporting
+      importance_rank: 4
+      description: 韩立的二哥，与韩立同睡一床，酣睡打呼，性格未见详细描写。
+      traits:
+        - 普通
+      relationships:
+        - target_id: char_hanli
+          type: 弟弟
+          description: 韩立是韩铸的弟弟
+    - id: char_dage
+      name: 大哥
+      role: supporting
+      importance_rank: 5
+      description: 韩立的大哥，在城里给老铁匠当学徒，是家人的骄傲，由三叔介绍工作。
+      traits:
+        - 勤奋
+        - 上进
+      relationships:
+        - target_id: char_hanli
+          type: 弟弟
+          description: 韩立是大哥的弟弟
+        - target_id: char_sanshu
+          type: 侄子
+          description: 三叔是大哥的三叔
+    - id: char_xiaomei
+      name: 小妹
+      role: supporting
+      importance_rank: 6
+      description: 韩立最疼爱的妹妹，喜欢红浆果，韩立进山时特意为她采摘。
+      traits:
+        - 可爱
+        - 受宠
+      relationships:
+        - target_id: char_hanli
+          type: 哥哥
+          description: 韩立是小妹的哥哥
+    - id: char_laozhangshu
+      name: 老张叔
+      role: supporting
+      importance_rank: 7
+      description: 村里唯一认识字的读书人，年轻时做过伴读书童，为村里孩子起名，韩立的名字就是他起的。
+      traits:
+        - 有学识
+        - 热心
+      relationships:
+        - target_id: char_hanli
+          type: 起名人
+          description: 老张叔为韩立起了正式名字
+    - id: char_sanshu
+      name: 三叔
+      aliases:
+        - 韩胖子
+      role: supporting
+      importance_rank: 8
+      description: 韩立的亲三叔，春香酒楼大掌柜，七玄门外门弟子，精明圆滑，引荐韩立参加七玄门测试并关照韩立一家。
+      traits:
+        - 精明
+        - 圆滑
+        - 有城府
+      relationships:
+        - target_id: char_hanli
+          type: 三叔
+          description: 韩立是三叔的侄子
+        - target_id: char_hanfu
+          type: 哥哥
+          description: 韩父是三叔的哥哥
+        - target_id: char_wanghufa
+          type: 上下级
+          description: 王护法是七玄门护法，三叔需恭敬对待王护法
+        - target_id: char_dage
+          type: 侄子
+          description: 大哥是三叔的侄子
+    - id: char_wanghufa
+      name: 王护法
+      role: supporting
+      importance_rank: 9
+      description: 七玄门护法，四十多岁，瘦削，身手敏捷，负责接送各地参加测试的孩童，对下属傲慢，对上层恭敬。
+      traits:
+        - 傲慢
+        - 势利
+        - 老练
+      relationships:
+        - target_id: char_sanshu
+          type: 下属
+          description: 三叔是七玄门外门弟子，需恭敬称呼王护法
+        - target_id: char_yuetangzhu
+          type: 上司
+          description: 岳堂主是王护法的上级，王护法对岳堂主极为恭敬
+    - id: char_yuetangzhu
+      name: 岳堂主
+      role: supporting
+      importance_rank: 10
+      description: 七玄门百锻堂堂主，红脸老者，负责主持入门测试，威严果断。
+      traits:
+        - 威严
+        - 严肃
+        - 权威
+      relationships:
+        - target_id: char_wanghufa
+          type: 下属
+          description: 王护法对岳堂主恭敬有加
+        - target_id: char_wuyan
+          type: 考核官
+          description: 岳堂主宣布舞岩为第一名并保送七绝堂
+        - target_id: char_hanli
+          type: 考核官
+          description: 岳堂主判定韩立为记名弟子
+    - id: char_wuyan
+      name: 舞岩
+      aliases:
+        - 舞少爷
+        - 舞大哥
+      role: antagonist
+      importance_rank: 11
+      description: 十三岁富家少年，自小练武，因表姐嫁给七玄门副门主而获得保送七绝堂的资格，傲慢自负，在测试中占据绝对优势并嘲笑他人。
+      traits:
+        - 傲慢
+        - 有背景
+        - 练武
+      relationships:
+        - target_id: char_hanli
+          type: 竞争对手
+          description: 舞岩在入门测试中领先韩立，并嘲讽韩立
+        - target_id: char_yuetangzhu
+          type: 被选拔者
+          description: 岳堂主宣布舞岩被保送七绝堂
+    - id: char_zhangjun
+      name: 张均
+      role: supporting
+      importance_rank: 12
+      description: 七玄门青年弟子，冷冰冰的态度，负责护送新弟子，对门内潜规则不满但隐忍，对墨大夫极为尊敬。
+      traits:
+        - 冷淡
+        - 正直
+        - 隐忍
+      relationships:
+        - target_id: char_hanli
+          type: 护送者
+          description: 张均为韩立等人带路
+        - target_id: char_modaifu
+          type: 尊敬的前辈
+          description: 张均对墨大夫极为恭敬
+        - target_id: char_wumingrui
+          type: 同门
+          description: 张均与吴铭瑞是师兄弟关系
+    - id: char_wumingrui
+      name: 吴铭瑞
+      role: supporting
+      importance_rank: 13
+      description: 七玄门青年弟子，瘦长脸，性格圆滑，爱拍马屁，对墨大夫大加称赞。
+      traits:
+        - 圆滑
+        - 善于逢迎
+      relationships:
+        - target_id: char_modaifu
+          type: 尊敬的前辈
+          description: 吴铭瑞大拍墨大夫马屁
+        - target_id: char_zhangjun
+          type: 同门
+          description: 吴铭瑞与张均是同门师兄弟
+    - id: char_modaifu
+      name: 墨大夫
+      aliases:
+        - 墨老
+      role: deuteragonist
+      importance_rank: 14
+      description: 墨大夫，六十余岁，高高瘦瘦，面皮焦黄，白发，不时咳嗽，是七玄门内神秘的神医，医术高明，在门中地位崇高，连副门主也不及他受尊敬。收韩立和张铁为记名弟子，带到神手谷。
+      traits:
+        - 神秘
+        - 医术高明
+        - 地位崇高
+        - 老迈
+      relationships:
+        - target_id: char_hanli
+          type: 师父
+          description: 墨大夫收韩立为记名弟子
+        - target_id: char_zhangtie
+          type: 师父
+          description: 墨大夫收张铁为记名弟子
+        - target_id: char_zhangjun
+          type: 受尊敬的前辈
+          description: 张均对墨大夫极为尊敬
+        - target_id: char_wumingrui
+          type: 受尊敬的前辈
+          description: 吴铭瑞对墨大夫大加称赞
+    - id: char_zhangtie
+      name: 张铁
+      role: supporting
+      importance_rank: 15
+      description: 与韩立同时被选为记名弟子的孩童，吃苦耐劳，在测试中紧跟在韩立之后，被墨大夫一并带走。
+      traits:
+        - 坚韧
+        - 能吃苦
+      relationships:
+        - target_id: char_modaifu
+          type: 同门
+          description: 张铁与韩立同为墨大夫的记名弟子
+        - target_id: char_modaifu
+          type: 师父
+          description: 墨大夫是张铁的师父
+acts:
+    - id: act_1
+      title: 第一幕
+      summary: 故事开端
+      scenes:
+        - id: scene_1
+          type: scene
+          title: 深夜的农舍
+          sequence: 1
+          setting:
+            location: 韩立家茅屋卧室
+            location_type: 农舍
+            time_of_day: 夜晚
+            atmosphere: 昏暗、寂静、带有霉味和轻微的争吵声
+          summary: 韩立躺在床上，听父母在隔壁说话，回忆自己名字的由来和对外面世界的向往，在二哥韩铸的鼾声中渐渐入睡。
+          chapter_source: 1
+          mood: 宁静中带着一丝压抑和期待
+          characters_present:
+            - id: char_hanli
+              state: 半睡半醒，内心充满对外界的向往
+            - id: char_hanzhu
+              state: 酣睡打呼
+            - id: char_hanfu
+              state: 在隔壁抽旱烟，与妻子交谈
+            - id: char_hanmu
+              state: 在隔壁唠唠叨叨埋怨
+          elements:
+            - type: action
+              id: elem_1
+              content: 夜色深沉，破旧的茅屋内，韩立和二哥韩铸挤在一张木床上。韩铸早已熟睡，打着响亮的鼾声。韩立睁着眼睛，望着黑暗中的房梁，隔壁传来父母压低声音的交谈。
+              visual_cue: 摇镜头从窗外月色缓缓推进到床上两个孩子，聚焦韩立睁着的眼睛
+            - type: internal_monologue
+              id: elem_2
+              content: 爹娘还在说我的事……这名字是老张叔起的，他说‘韩立’二字寓意‘立足大地’，可我总觉着，外面的世界才值得立足。
+              speaker_id: char_hanli
+              speaker_name: 韩立
+            - type: action
+              id: elem_3
+              content: 韩铸翻了个身，鼾声渐弱。韩立侧耳听着隔壁父母低声的叹息和絮语，脑海中浮现出三叔描述的山外景象——城镇、高楼、车马。
+            - type: action
+              id: elem_4
+              content: 虫鸣声从窗外传来，韩立的眼皮渐渐沉重。在一片鼾声和夜色中，他慢慢闭上眼睛，呼吸变得均匀。
+        - id: scene_2
+          type: scene
+          title: 午后的家
+          sequence: 2
+          setting:
+            location: 韩立家堂屋
+            location_type: 农舍
+            time_of_day: 中午
+            atmosphere: 炎热、忙碌，突然到来的访客带来新希望
+          summary: 韩立从山里拾柴回来，发现三叔来访。三叔说明来意，推荐韩立参加七玄门内门弟子测试，韩父经犹豫后同意。
+          chapter_source: 1
+          mood: 期盼与不安交织
+          characters_present:
+            - id: char_hanli
+              state: 兴奋、好奇
+            - id: char_sanshu
+              state: 精明、和蔼、有说服力
+            - id: char_hanfu
+              state: 犹豫、最终下决心
+            - id: char_hanmu
+              state: 在一旁倾听，偶尔插话
+          elements:
+            - type: action
+              id: elem_1
+              content: 午后，韩立背着一捆干柴，推开自家院门。院子里停着一辆青布驴车，他愣了一下，放下柴火，快步走向堂屋。
+              visual_cue: 镜头跟随韩立从院门到堂屋门口
+            - type: internal_monologue
+              id: elem_2
+              content: 三叔的驴车？难道家里出了什么事？
+              speaker_id: char_hanli
+              speaker_name: 韩立
+            - type: action
+              id: elem_3
+              content: 堂屋内，韩父、韩母正陪着一位穿绸缎的中年男子说话，正是三叔。桌上放着几包点心。
+              visual_cue: 推进镜头，展现三人表情：三叔热切，韩父愁眉，韩母低头擦泪
+            - type: dialogue
+              id: elem_4
+              content: 二哥，嫂子，你们听我说，这可是难得的好机会。七玄门招收内门弟子，只要通过测试，吃穿不愁，将来还有大出息！
+              speaker_id: char_sanshu
+              speaker_name: 三叔
+              tone: 热切
+              delivery: 双手比划，语气激昂
+            - type: action
+              id: elem_5
+              content: 韩父搓着粗糙的双手，脸上写满犹豫。韩母用袖子擦拭眼角。
+              visual_cue: 特写韩父的双手，然后拉回面部
+            - type: dialogue
+              id: elem_6
+              content: 他三叔，小立才十岁，这么小离家……再说了，测试要是有个闪失……
+              speaker_id: char_hanfu
+              speaker_name: 韩父
+              tone: 迟疑
+              delivery: 声音低沉，断断续续
+            - type: dialogue
+              id: elem_7
+              content: 二哥你放心，我在七玄门多少有些关系，小立这孩子机灵，准能行！再说，测试有吃有住，又不花钱。要是选上了，每个月还能给家里捎些银子回来。
+              speaker_id: char_sanshu
+              speaker_name: 三叔
+              tone: 信心十足
+              delivery: 拍拍韩父肩膀
+            - type: action
+              id: elem_8
+              content: 韩立在门外听到这里，心中一热。他紧紧握了握拳头，大步跨进门槛。
+              visual_cue: 横移镜头跟拍韩立跨门动作
+            - type: dialogue
+              id: elem_9
+              content: 爹，娘，我愿意去参加测试！
+              speaker_id: char_hanli
+              speaker_name: 韩立
+              tone: 坚定
+              delivery: 目光直视父母，毫不退缩
+            - type: action
+              id: elem_10
+              content: 屋里三人齐齐看向韩立。韩父愣了一愣，韩母连忙擦干眼泪。三叔脸上露出赞许的笑容。
+              visual_cue: 三人反应镜头的快速切换
+            - type: dialogue
+              id: elem_11
+              content: 好小子，有志气！
+              speaker_id: char_sanshu
+              speaker_name: 三叔
+              tone: 满意
+              delivery: 对韩立竖起大拇指
+            - type: action
+              id: elem_12
+              content: 韩父沉默良久，望着韩立坚毅的眼神，终于长叹一口气，缓缓点了点头。
+              visual_cue: 特写韩父点头的慢动作
+            - type: dialogue
+              id: elem_13
+              content: 罢了，既然老三你这么说了，那就让小立去试试吧。不过，一切要小心。
+              speaker_id: char_hanfu
+              speaker_name: 韩父
+              tone: 无奈中带点期盼
+              delivery: 声音沙哑，最后看向韩立
+        - id: scene_3
+          type: scene
+          title: 离别之日
+          sequence: 3
+          setting:
+            location: 村口路边
+            location_type: 荒野
+            time_of_day: 白天
+            atmosphere: 伤感、不舍，有些许悲壮
+          summary: 一个多月后，三叔准时来接韩立。韩立告别父母，登上马车，强忍泪水，暗下决心挣大钱后回来。
+          chapter_source: 1
+          mood: 离愁别绪，略带希望
+          characters_present:
+            - id: char_hanli
+              state: 伤感、强忍泪水、暗下决心
+            - id: char_sanshu
+              state: 照顾、催促
+            - id: char_hanfu
+              state: 反复嘱咐、担忧
+            - id: char_hanmu
+              state: 落泪、叮嘱保重
+          elements:
+            - type: narration
+              id: elem_1
+              content: 一个多月后，三叔如约驾着马车停在村口路边，等韩立告别家人。
+              visual_cue: 远景：村口土路旁，一辆旧马车，三叔端坐车辕，韩父韩母站在路旁，韩立背着包袱走来。
+            - type: action
+              id: elem_2
+              content: 韩立向父亲深深鞠躬，又转身抱住母亲。韩母粗糙的手抚摸他的脸，眼眶泛红。韩父强作镇定，拍了拍儿子的肩膀，低语交代。
+              delivery: 韩母动作轻柔，韩父拍肩时有伤感的停顿。
+              visual_cue: 中景：三人互动，阳光斜照，尘土微扬。
+            - type: action
+              id: elem_3
+              content: 韩立松开母亲，咬紧嘴唇，转身登上马车。他在车辕上坐定，迅速用袖子擦了擦眼角。
+              delivery: 动作决绝，但背对父母时肩膀微颤。
+              visual_cue: 特写：韩立低头拭泪的手，随后抬头望向家的方向。
+            - type: internal_monologue
+              id: elem_4
+              content: 一定要挣大钱后回来！
+              speaker_id: char_hanli
+              speaker_name: 韩立
+              delivery: 内心坚定，画外音略带沙哑
+              visual_cue: 镜头拉远：马车缓缓驶离，父母的剪影越来越小。
+        - id: scene_4
+          type: scene
+          title: 春香酒楼
+          sequence: 4
+          setting:
+            location: 青牛镇春香酒楼后院
+            location_type: 城镇
+            time_of_day: 中午到下午
+            atmosphere: 热闹、陌生、稍显忙碌
+          summary: 韩立与三叔乘坐马车到达青牛镇春香酒楼，三叔把他安顿在偏僻小院休息，自己出去招呼客人，韩立倒头就睡。
+          chapter_source: 2
+          mood: 疲倦中带着新鲜感
+          characters_present:
+            - id: char_hanli
+              state: 疲惫、初到陌生环境
+            - id: char_sanshu
+              state: 忙碌、照顾侄子
+          elements:
+            - type: action
+              id: elem_1
+              content: 一辆老旧马车缓缓停在青牛镇春香酒楼后院，车帘掀开，三叔先跳下车，随后韩立跟着爬下。马车轮子碾过青石板，扬起一阵尘土。后院人声嘈杂，几个伙计正搬着酒坛，空气中混杂着酒香和油烟气。
+              visual_cue: 镜头从马车轮子摇到三叔和韩立，再扫过后院忙碌景象
+            - type: action
+              id: elem_2
+              content: 三叔领着韩立穿过一条狭窄走廊，拐入后院的偏僻小院。推开一扇吱呀作响的木门，屋内陈设简单，只有一张木床和一张旧桌。三叔交代几句，拍了拍韩立的肩膀，便转身快步离开，前堂传来嘈杂的招呼声。
+              visual_cue: 镜头跟随两人从走廊到小院，门被推开时特写门轴上的灰尘
+            - type: action
+              id: elem_3
+              content: 韩立独自站在屋内，环顾四周，打了个哈欠。他脱掉布鞋，爬到床上，头刚沾到硬邦邦的枕头，便眼皮沉沉合上，很快呼吸变得均匀，沉沉睡去。阳光从窗纸透过，在地上投下斑驳光影。
+              visual_cue: 中景拍摄韩立从站到躺，特写他闭上眼的刹那，光线变化暗示时间流逝
+    - id: act_2
+      title: 第二幕
+      summary: 故事发展
+      scenes:
+        - id: scene_5
+          type: scene
+          title: 夜晚谈心
+          sequence: 5
+          setting:
+            location: 春香酒楼后院客房
+            location_type: 城镇
+            time_of_day: 夜晚
+            atmosphere: 温馨、轻松，充满长辈的关爱
+          summary: 晚上小厮送来饭菜，三叔忙完后来看韩立，两人聊天，三叔讲江湖趣事，韩立渐渐放松，有说有笑。
+          chapter_source: 2
+          mood: 温暖、轻松
+          characters_present:
+            - id: char_hanli
+              state: 放松、逐渐信任三叔
+            - id: char_sanshu
+              state: 和蔼、健谈
+          elements:
+            - type: action
+              id: elem_1
+              content: 夜晚，春香酒楼后院客房。小厮端着托盘敲门进入，将几碟饭菜整齐摆放在桌上，随即退出。
+            - type: action
+              id: elem_2
+              content: 三叔推门而入，脸上带着忙碌后的疲惫，看到韩立安然坐着，露出欣慰的笑容，走到桌边坐下。
+            - type: dialogue
+              id: elem_3
+              content: 立儿，饿坏了吧？边吃边聊。今儿个我可听了个新鲜事儿，山下镇上有个号称‘铁掌’的莽汉，非要跟七玄门的弟子比试，结果被人家一指头点趴下了，你说笑不笑？
+              speaker_id: char_sanshu
+              speaker_name: 三叔
+              tone: 和蔼、逗趣
+            - type: action
+              id: elem_4
+              content: 韩立听得入神，夹起一块肉放进嘴里，咀嚼着，脸上渐渐露出笑容。
+            - type: dialogue
+              id: elem_5
+              content: 三叔，那弟子是用的什么武功？好厉害！
+              speaker_id: char_hanli
+              speaker_name: 韩立
+              tone: 好奇、兴奋
+            - type: action
+              id: elem_6
+              content: 三叔哈哈一笑，又讲起七玄门护法巡山的威风轶事。两人越聊越投机，客房内不时传出笑声，韩立完全放松下来，有说有笑。
+        - id: scene_6
+          type: scene
+          title: 王护法到来
+          sequence: 6
+          setting:
+            location: 春香酒楼门前
+            location_type: 城镇
+            time_of_day: 白天
+            atmosphere: 严肃、正式，带有江湖门派的威压
+          summary: 第三天，七玄门王护法驾乘带有玄字旗的马车到来，三叔恭敬迎接，并私下贿赂王护法。王护法带韩立上车，准备前往七玄门。
+          chapter_source: 2
+          mood: 拘谨、压抑、带着期待
+          characters_present:
+            - id: char_wanghufa
+              state: 傲慢、冷漠、公事公办
+            - id: char_sanshu
+              state: 恭敬、圆滑、暗中送银两
+            - id: char_hanli
+              state: 紧张、对王护法感到畏惧
+          elements:
+            - type: action
+              id: elem_1
+              content: 第三天的早晨，一辆带有玄字旗的马车缓缓停在春香酒楼门前。
+              visual_cue: 马车上的旗帜写着‘玄’字，周围路人侧目
+            - type: action
+              id: elem_2
+              content: 三叔快步上前，恭敬地迎接王护法下车。
+              visual_cue: 三叔满脸堆笑，弯腰抱拳
+            - type: action
+              id: elem_3
+              content: 三叔私下将一个钱袋塞入王护法手中，低声说了几句。
+              visual_cue: 两人眼神交汇，钱袋迅速交换，周围无人注意
+            - type: action
+              id: elem_4
+              content: 王护法不动声色地收下钱袋，然后朝韩立招了招手。
+              visual_cue: 王护法面色如常，眼神示意韩立
+            - type: action
+              id: elem_5
+              content: 韩立跟着王护法上了马车。
+              visual_cue: 韩立回头看了一眼三叔，然后钻进车厢
+            - type: action
+              id: elem_6
+              content: 马车缓缓启动，准备前往七玄门。
+              visual_cue: 车轮滚动，尘土扬起，马车消失在道路尽头
+        - id: scene_7
+          type: scene
+          title: 马车内
+          sequence: 7
+          setting:
+            location: 前往七玄门的马车车厢内
+            location_type: 荒野
+            time_of_day: 白天（多日行程中）
+            atmosphere: 拥挤、嘈杂、阶层分明
+          summary: 韩立在拥挤的车厢内观察其他孩童，将大家分为三类：以舞岩为首的锦衣少年、城镇孩童、以及像自己一样的乡下穷孩子，内心明白阶层差距。
+          chapter_source: 3
+          mood: 压抑、现实、隐约感到不平等
+          characters_present:
+            - id: char_hanli
+              state: 机警、默默观察、内向
+            - id: char_wuyan
+              state: 傲慢、被众孩童簇拥
+          elements:
+            - type: action
+              id: elem_1
+              content: 韩立在拥挤的车厢内观察其他孩童。他将他们分为三类：以舞岩为首的锦衣少年、衣着整洁的城镇孩童、以及像自己一样衣衫破旧的乡下穷孩子。他目光在每一类孩子身上停留片刻，内心明白阶层之间那道无形的鸿沟。
+              visual_cue: 镜头从韩立的主观视角扫过车厢内不同背景的孩童，聚焦于他们的衣着和神态。
+        - id: scene_8
+          type: scene
+          title: 彩霞山暮色
+          sequence: 8
+          setting:
+            location: 彩霞山山脚及清客院
+            location_type: 门派
+            time_of_day: 傍晚到夜晚
+            atmosphere: 壮丽、肃穆、新奇
+          summary: 傍晚到达彩霞山，孩童们被落日美景迷住。王护法带领众人上山，遇到岳堂主，被安排到清客院住宿。韩立梦见自己成为武林高手。
+          chapter_source: 3
+          mood: 惊叹、兴奋、充满幻想
+          characters_present:
+            - id: char_wanghufa
+              state: 恭敬、向岳堂主汇报
+            - id: char_yuetangzhu
+              state: 威严、大模大样
+            - id: char_hanli
+              state: 惊叹、兴奋、晚上做梦
+          elements:
+            - type: action
+              id: elem_1
+              content: 傍晚时分，彩霞山笼罩在金色的余晖中。一群孩童跟随着王护法沿着山路走来，疲惫但好奇地四处张望。夕阳将天边染成绚烂的橙红色，山峰如剪影般层层叠叠。
+            - type: action
+              id: elem_2
+              content: 几个孩童停下脚步，仰头望着壮丽的落日，发出惊叹声。王护法回头瞥了一眼，不耐烦地挥手催促。
+            - type: dialogue
+              id: elem_3
+              content: 别看了，天快黑了，赶紧上山！
+              speaker_id: char_wanghufa
+              speaker_name: 王护法
+              tone: 催促
+              delivery: 语气不耐烦
+              visual_cue: 他挥着手，脚步加快
+            - type: action
+              id: elem_4
+              content: 韩立从人群中挤出来，默默跟上队伍，目光却仍留恋地扫过远山。其他孩童也纷纷收回目光，小跑着跟上。
+            - type: action
+              id: elem_5
+              content: 山路蜿蜒向上，树木渐密。前方传来脚步声，一位红脸老者缓步走下，正是百锻堂堂主岳堂主。王护法连忙上前，拱手行礼。
+            - type: dialogue
+              id: elem_6
+              content: 属下王成，护送新一批测试孩童到山，见过岳堂主。
+              speaker_id: char_wanghufa
+              speaker_name: 王护法
+              tone: 恭敬
+              delivery: 微微躬身，态度谦卑
+              visual_cue: 他停下脚步，让开道路
+            - type: dialogue
+              id: elem_7
+              content: 嗯，人数不少。先带去清客院安置，明日一早开始测试。
+              speaker_id: char_yuetangzhu
+              speaker_name: 岳堂主
+              tone: 威严，不容置疑
+              delivery: 扫视孩童们一眼，转身示意王护法带路
+              visual_cue: 岳堂主负手而立，目光如电
+            - type: action
+              id: elem_8
+              content: 王护法领命，带着孩童们继续上山。岳堂主则朝相反方向走去，消失在暮色中。
+            - type: action
+              id: elem_9
+              content: 众人来到清客院——一座简朴的院落，几排木房整齐排列。王护法推开一间空房的门，示意孩子们进去。里面只有几张简陋的床铺和一张木桌。
+            - type: dialogue
+              id: elem_10
+              content: 今晚你们就住这里，明日一早听钟声集合。规矩点，别乱跑。
+              speaker_id: char_wanghufa
+              speaker_name: 王护法
+              tone: 告诫
+              delivery: 最后警告般扫视一圈，转身离开
+              visual_cue: 他推上门，脚步声渐远
+            - type: action
+              id: elem_11
+              content: 韩立选了一张靠墙的床铺，放下随身的小包袱。其他孩童也各自找位置躺下，很快房间里响起窸窸窣窣的翻身声和低声交谈。窗外夜色渐浓，虫鸣四起。
+            - type: action
+              id: elem_12
+              content: 韩立躺在床上，闭上眼睛。疲惫袭来，意识渐渐模糊。他感觉自己走进一个陌生而广阔的练武场，手中握着一柄长剑，身体轻盈如燕。他腾空跃起，剑光闪烁，招招式式凌厉无比，周围的对手纷纷倒下。他感到前所未有的强大和自由。
+            - type: action
+              id: elem_13
+              content: 梦境中，韩立站在山顶，脚下云海翻涌，夕阳如血。他仰天长啸，声震四野。但一阵清脆的钟声突然响起，将一切震碎。
+            - type: action
+              id: elem_14
+              content: 韩立猛地睁开眼，发现自己仍在清客院的床铺上，窗外晨光微熹。钟声还在回荡——那是集合的信号。
+        - id: scene_9
+          type: scene
+          title: 测试开始
+          sequence: 9
+          setting:
+            location: 竹林前斜坡空地
+            location_type: 荒野
+            time_of_day: 清晨
+            atmosphere: 紧张、竞争氛围浓厚
+          summary: 清晨，岳堂主宣布测试规则：沿竹林、岩壁到山崖，正午前到达崖顶者为正式弟子，其余可作记名弟子。众孩童立即冲入竹林。
+          chapter_source: 4
+          mood: 紧张、斗志昂扬
+          characters_present:
+            - id: char_yuetangzhu
+              state: 威严、果断
+            - id: char_hanli
+              state: 紧张、决心不输他人
+          elements:
+            - type: action
+              id: elem_1
+              content: 清晨，竹林前的斜坡空地上，众孩童站成一排，岳堂主站在前方，背手而立，目光扫过众人。
+            - type: dialogue
+              id: elem_2
+              content: 本次测试规则：沿着竹林、岩壁到山崖，正午前到达崖顶者为正式弟子，其余可作记名弟子。出发！
+              speaker_id: char_yuetangzhu
+              speaker_name: 岳堂主
+              tone: 严肃地宣布
+            - type: action
+              id: elem_3
+              content: 岳堂主话音落下，众孩童争先恐后冲入竹林，韩立也混杂其中，向前奔去。
+    - id: act_3
+      title: 第三幕
+      summary: 故事结局
+      scenes:
+        - id: scene_10
+          type: scene
+          title: 竹林攀爬
+          sequence: 10
+          setting:
+            location: 竹林斜坡
+            location_type: 荒野
+            time_of_day: 上午
+            atmosphere: 艰难、闷热、体力消耗巨大
+          summary: 韩立在竹林中奋力向上攀爬，越来越累，不得不借助竹子前进。瘦长师兄张均冷着脸跟在身后保护。韩立稍作休息后继续，终于走出竹林。
+          chapter_source: 4
+          mood: 劳累、坚持
+          characters_present:
+            - id: char_hanli
+              state: 疲惫、咬牙坚持
+            - id: char_zhangjun
+              state: 冷漠、尽责保护
+          elements:
+            - type: action
+              id: elem_1
+              content: 韩立在竹林中奋力向上攀爬，汗水浸湿了他的衣衫。
+            - type: action
+              id: elem_2
+              content: 他越来越疲惫，不得不伸手抓住身旁的竹子，借助弹性向前移动。
+            - type: action
+              id: elem_3
+              content: 瘦长脸的师兄张均冷着脸，紧紧跟在韩立身后，保持着随时可保护的姿态。
+            - type: action
+              id: elem_4
+              content: 韩立停下脚步，靠在一根竹子上大口喘气，稍作休息。
+            - type: action
+              id: elem_5
+              content: 他深吸一口气，咬牙继续向上攀爬。
+            - type: action
+              id: elem_6
+              content: 终于，韩立拨开最后一丛竹叶，走出了竹林。
+        - id: scene_11
+          type: scene
+          title: 岩壁挣扎
+          sequence: 11
+          setting:
+            location: 岩壁地带
+            location_type: 荒野
+            time_of_day: 上午到近午
+            atmosphere: 险峻、疼痛、绝望与倔强
+          summary: 韩立面对陡峭岩壁，手肘膝盖被割伤，碎石渗入伤口疼痛难忍。看到舞岩遥遥领先，几乎放弃，但一股狠劲使他继续攀爬，被师兄保护才未掉落。
+          chapter_source: 4
+          mood: 痛苦、不甘、倔强
+          characters_present:
+            - id: char_hanli
+              state: 受伤、疼痛、倔强
+            - id: char_zhangjun
+              state: 警觉、随时准备救援
+            - id: char_wuyan
+              state: 领先、遥远地张望
+          elements:
+            - type: action
+              id: elem_1
+              content: 韩立手脚并用，艰难地攀爬陡峭的岩壁。他的手肘和膝盖被粗糙的岩石割伤，鲜血渗出，碎石嵌入伤口，每移动一下都带来钻心的疼痛。
+              visual_cue: 镜头特写韩立痛苦的表情和流血的手肘膝盖
+            - type: action
+              id: elem_2
+              content: 韩立抬头望去，舞岩已经遥遥领先，几乎看不到他的背影。周围的其他测试者也都远远超过了他。
+              visual_cue: 镜头从韩立视角仰视上方，舞岩的小身影已远去
+            - type: internal_monologue
+              id: elem_3
+              content: （内心独白）我真的不行了……太疼了，差距这么大，我怎么可能追得上？放弃吧……
+              speaker_id: char_hanli
+              speaker_name: 韩立
+              tone: 绝望
+              delivery: 画外音，虚弱无力
+            - type: action
+              id: elem_4
+              content: 韩立的手指一滑，身体失去平衡，向下方坠落。就在即将坠落的瞬间，一只有力的手臂从身侧伸出，稳稳地托住了他的腰。
+              visual_cue: 慢动作：韩立滑落，师兄的手突然介入
+            - type: action
+              id: elem_5
+              content: 那是负责护送的师兄（张均）。他面无表情地看了韩立一眼，手上用力一推，将韩立推回岩壁。韩立重新抓住岩石，仿佛被这一推激起了狠劲，他咬紧牙关，眼神变得坚定，继续向上攀爬。
+              visual_cue: 韩立的眼神从绝望转为倔强，特写他紧握岩石的手指
+        - id: scene_12
+          type: scene
+          title: 绳索攀登与崖顶
+          sequence: 12
+          setting:
+            location: 山崖绳索及崖顶
+            location_type: 荒野
+            time_of_day: 正午
+            atmosphere: 紧迫、遗憾、最终结果揭晓
+          summary: 韩立到达崖底，攀爬绳索失败，被张均师兄带上崖顶。正午已到，岳堂主宣布结果：舞岩保送七绝堂，六人入百锻堂，韩立与张铁成为记名弟子。
+          chapter_source: 4
+          mood: 失望、羡慕、接受现实
+          characters_present:
+            - id: char_hanli
+              state: 精疲力竭、失落
+            - id: char_zhangjun
+              state: 冷静、执行任务
+            - id: char_yuetangzhu
+              state: 威严、宣布结果
+            - id: char_wuyan
+              state: 得意、炫耀
+            - id: char_zhangtie
+              state: 同样疲惫、被点名
+          elements:
+            - type: action
+              id: elem_1
+              content: 韩立双手抓住粗麻绳，脚下在岩壁上奋力蹬踏，但手掌磨破滑脱，整个人从半空坠落，重重摔在崖底泥地上。他趴在地上喘息，掌心渗出血丝。
+            - type: action
+              id: elem_2
+              content: 张均从崖顶放下另一根绳索，面无表情地快速滑下，落在韩立身边。他一把抓住韩立的衣领，单臂环住他的腰，足尖点地借力攀升，几个腾跃便带着韩立回到崖顶。
+            - type: action
+              id: elem_3
+              content: 崖顶上，岳堂主负手而立，身旁站着舞岩、张铁和其余几名通过测试的孩童。舞岩双臂抱胸，嘴角挂着轻蔑的笑。
+            - type: dialogue
+              id: elem_4
+              content: 时辰已到，未攀上者算作失败。现在宣布结果——
+              speaker_id: char_yuetangzhu
+              speaker_name: 岳堂主
+              tone: 威严，不容置疑
+            - type: dialogue
+              id: elem_5
+              content: 舞岩，身法出众，保送七绝堂。余者——张铁、李二狗、王柱、陈小虎、赵石头、孙有志，入百锻堂。
+              speaker_id: char_yuetangzhu
+              speaker_name: 岳堂主
+              tone: 公事公办
+            - type: action
+              id: elem_6
+              content: 韩立站在人群边缘，低着头，攥紧拳头。脚尖下意识地蹭着地上的碎石。
+            - type: internal_monologue
+              id: elem_7
+              content: 果然还是不行吗……连绳子都爬不上去，还能指望什么。不过，好歹没直接被赶走。父亲、母亲，还有妹妹……我至少留下来了。
+              speaker_id: char_hanli
+              speaker_name: 韩立
+            - type: dialogue
+              id: elem_8
+              content: 韩立、张铁，你二人虽未攀上绳索，但根基尚可，留作记名弟子，暂由我门下弟子负责调教。
+              speaker_id: char_yuetangzhu
+              speaker_name: 岳堂主
+              tone: 略缓，带一丝勉励
+            - type: action
+              id: elem_9
+              content: 韩立猛然抬头，眼中闪过一丝意外。他侧头看向身边的张铁——那孩子比他矮半个头，正捏着衣角，脸上混杂着紧张与庆幸。
+            - type: action
+              id: elem_10
+              content: 正午的太阳直射崖顶，岳堂主转身背对众人，袍角翻动。张均面无表情地站在一旁，目光冷淡地扫过韩立和张铁。
+        - id: scene_13
+          type: scene
+          title: 下山与遇墨大夫
+          sequence: 13
+          setting:
+            location: 下山山路，茂密树林
+            location_type: 荒野
+            time_of_day: 午后
+            atmosphere: 沉闷、偶然转机
+          summary: 张均和吴铭瑞带领新弟子下山，途中议论舞岩靠关系进入七绝堂，表露不满。此时墨大夫从林中走出，将韩立和张铁收为记名弟子，带走。
+          chapter_source: 5
+          mood: 意外、重燃希望
+          characters_present:
+            - id: char_zhangjun
+              state: 冷淡、对门内不公不满
+            - id: char_wumingrui
+              state: 圆滑、拍马屁
+            - id: char_hanli
+              state: 好奇、顺从
+            - id: char_zhangtie
+              state: 同韩立一起被带走，沉默
+            - id: char_modaifu
+              state: 神秘、病弱却有威严
+          elements:
+            - type: action
+              id: elem_1
+              content: 张均和吴铭瑞带领着十几个新弟子沿着下山山路缓缓前行。吴铭瑞回头望了望七玄门方向，压低声音对张均说话。
+              visual_cue: 镜头从队伍后方跟随，展现蜿蜒山路和两旁茂密树林。
+            - type: dialogue
+              id: elem_2
+              content: 张师兄，你说那舞岩公子，靠着表姐嫁给副门主，就能直接保送七绝堂，咱们这些苦哈哈的弟子可没这福气。
+              speaker_id: char_wumingrui
+              speaker_name: 吴铭瑞
+              tone: 酸溜溜，带着奉承
+              delivery: 侧过头，挤眉弄眼
+            - type: dialogue
+              id: elem_3
+              content: 哼，门里这种事还少么？见怪不怪了。不过那小子确实有两下子，倒也不算全是靠关系。
+              speaker_id: char_zhangjun
+              speaker_name: 张均
+              tone: 冷淡，带着一丝不满
+              delivery: 面无表情，目视前方
+            - type: action
+              id: elem_4
+              content: 二人刚说完，旁边的树林中传来一阵咳嗽声。一个高高瘦瘦、面皮焦黄、六十多岁的老者从树影中缓步走出，正是墨大夫。他身披灰袍，不时用手帕掩口轻咳。
+              visual_cue: 镜头切至林间阴影，墨大夫由远及近，咳嗽声由弱渐强。
+            - type: action
+              id: elem_5
+              content: 墨大夫目光扫过队伍中的孩童，最后定在韩立和张铁身上，抬手随意指了两人。张均和吴铭瑞立即恭敬地停下脚步。
+              visual_cue: 墨大夫枯瘦的手指划过空气，指向队伍中两个不起眼的少年。
+            - type: dialogue
+              id: elem_6
+              content: 你，还有你，跟我走。
+              speaker_id: char_modaifu
+              speaker_name: 墨大夫
+              tone: 平淡无波，不容置疑
+              delivery: 语气简短，说完便转身朝林中走去
+            - type: action
+              id: elem_7
+              content: 韩立和张铁先是一愣，互相对视一眼，然后赶紧跟上墨大夫的脚步。张均对二人微微点头示意，吴铭瑞则弓着腰恭送。三人很快消失在密林深处，咳嗽声渐渐远去。
+              visual_cue: 镜头跟随三人背影，阳光透过树叶形成斑驳光点，最后完全隐入黑暗。
+        - id: scene_14
+          type: scene
+          title: 神手谷
+          sequence: 14
+          setting:
+            location: 神手谷（七玄门内山谷）
+            location_type: 门派
+            time_of_day: 下午到傍晚
+            atmosphere: 药香浓郁、清幽、与世隔绝
+          summary: 墨大夫带韩立和张铁进入神手谷，介绍药田和房屋，安排二人住下，吩咐晚上来大堂见面。韩立疲惫不堪，倒头便睡，正式成为半个七玄门弟子。
+          chapter_source: 5
+          mood: 平静、清新、起点
+          characters_present:
+            - id: char_modaifu
+              state: 咳嗽、平淡、不容置疑
+            - id: char_hanli
+              state: 疲惫、对新环境感到好奇
+            - id: char_zhangtie
+              state: 同样疲惫、沉默
+          elements:
+            - type: action
+              id: elem_1
+              content: 神手谷入口处，墨大夫推开两扇木门，露出谷内景象。药田沿山坡层层叠叠，茅草屋坐落其间。墨大夫转身，对身后两个少年做了个'跟上'的手势。
+              visual_cue: 韩立和张铁在谷口张望，药田在夕阳下泛着金黄
+            - type: dialogue
+              id: elem_2
+              content: 这片药田归我打理，你们平日负责浇水、除草。东边两间屋子空着，你们各挑一间住下。
+              speaker_id: char_modaifu
+              speaker_name: 墨大夫
+              tone: 平淡，略带咳嗽
+            - type: action
+              id: elem_3
+              content: 韩立和张铁对视一眼，默默点头。韩立的目光扫过药田里各种草药，脚上磨起的血泡让他每走一步都忍不住皱眉。
+              visual_cue: 韩立低头看脚，步履有些踉跄
+            - type: internal_monologue
+              id: elem_4
+              content: 总算安顿下来了……这地方比家里还清静，就是不知道夜里会不会冷。
+              speaker_id: char_hanli
+              speaker_name: 韩立
+            - type: action
+              id: elem_5
+              content: 墨大夫指着谷中心一座稍大的木楼，咳嗽了两声。韩立和张铁跟着他的手指望去。
+              visual_cue: 墨大夫手指的方向，木楼屋檐下挂着一块'药堂'木匾
+            - type: dialogue
+              id: elem_6
+              content: 你们现在就去收拾屋子，天黑之前到那栋楼里见我，我有规矩要说。
+              speaker_id: char_modaifu
+              speaker_name: 墨大夫
+              tone: 不容置疑
+            - type: action
+              id: elem_7
+              content: 韩立和张铁各自走进茅草屋。韩立推开房门，屋里只有一张木床和一张简陋木桌，积了一层薄灰。他连铺盖都没打开，直接把包袱往桌上一放，仰面倒在床板上。
+              visual_cue: 阳光从窗户斜射进来，屋梁上挂着蛛网
+            - type: internal_monologue
+              id: elem_8
+              content: 从今天起就算半个七玄门的人了……比家里自在，就是不知道能不能学到真本事。
+              speaker_id: char_hanli
+              speaker_name: 韩立
+              tone: 疲惫而满足
+              delivery: 声音越来越轻，带出困意
+            - type: action
+              id: elem_9
+              content: 韩立困得不行，眼皮越来越重。他挣扎着想坐起来整理床铺，但身体像散了架一样，没几分钟就彻底睡过去了。房门外，张铁还在吭哧吭哧地搬行李。
+              visual_cue: 镜头拉远，韩立蜷缩在床上，窗外天色渐暗，虫鸣声起
+            - type: narration
+              id: elem_10
+              content: 就这样，韩立以一个记名弟子的身份，正式踏入了七玄门。此时他还不知道，神手谷这扇门背后，通向的不仅是武功和药田，而是一切不可思议的开始。

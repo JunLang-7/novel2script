@@ -32,16 +32,16 @@ go build -o novel2script .
 export NOVEL2SCRIPT_API_KEY=sk-ant-xxx
 
 # 转换小说为剧本
-novel2script convert 凡人修仙传.txt -o 凡修_剧本.yaml --parallel 5
+novel2script convert examples/input/凡人修仙传.txt -o examples/ouput/凡人修仙传.yaml --parallel 5
 
 # 预览成本（不调用 LLM）
-novel2script convert 凡人修仙传.txt --dry-run
+novel2script convert examples/input/凡人修仙传.txt --dry-run
 
 # 输出可读的 Markdown 草稿
-novel2script convert 凡人修仙传.txt -f md -o draft.md
+novel2script convert examples/input/凡人修仙传.txt -f md -o examples/onput/凡人修仙传.md
 
 # 验证生成的剧本
-novel2script validate 凡修_剧本.yaml
+novel2script validate examples/ouput/凡人修仙传.yaml
 
 # 导出 JSON Schema
 novel2script schema -o script-schema.json
